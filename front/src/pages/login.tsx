@@ -26,6 +26,7 @@ const Login: React.FC = () => {
     const [email, setEmail] = useState("");
     const [senha, setSenha] = useState("");
     const [error, setError] = useState("");
+    const [success, setSuccess] = useState("");
 
     // validações usando zod
     const emailValid = emailSchema.safeParse(email).success;
@@ -42,9 +43,11 @@ const Login: React.FC = () => {
 
         setError("");
 
+        setSuccess("Login válido!"); //confirma q enviou visualmente
+
         // Aqui você faz o login real (axios, etc.)
-        alert("Login válido!");
-        };
+        
+    };
 
     return (
         <Box
@@ -58,7 +61,7 @@ const Login: React.FC = () => {
                 borderRadius: '8',
             }}
         >
-            <Paper elevation={3} sx={{ p: 4, minWidth: 300, position: "relative", overflow: "visible"}}>
+            <Paper elevation={3} sx={{ p: 4 , position: "relative", overflow: "visible"}}>
                 <Box textAlign="center" mb={2}>
                     <Box
                         sx={{
@@ -84,17 +87,27 @@ const Login: React.FC = () => {
                     <Typography variant="h6" component="h1" fontWeight={600} mb={1}>
                         Bem-vindo
                     </Typography>
-                    <Typography variant="body2" color="text.secondary">
+                    <Typography variant="body2" color="text.secondary" mb={1}>
                         Faça login para acessar o sistema
                     </Typography>
                         {/* Exemplo de mensagem de erro? */}
                     {error && (
-                        <Alert severity="error" sx={{ mb: 2 }}>
+                        <Alert severity="error">
                             {error}
                         </Alert>
                     )}
-
-                    <Box component="form" onSubmit={handleSubmit}>
+                    {success && (
+                        <Alert severity="success" >
+                            {success}
+                        </Alert>
+                    )}
+                    <Box component="form" onSubmit={handleSubmit}
+                        sx={{
+                            width: "100%",
+                            maxWidth: 400, // deixa TUDO mais estreito
+                            mx: "auto",
+                        }}
+                    >
                         <TextField
                             label="Email"
                             type="email"
@@ -105,7 +118,6 @@ const Login: React.FC = () => {
                             helperText={!emailValid && email.length > 0 ? "Email inválido" : ""}   
                             sx={{ 
                                 mt: 1 , // adiciona espaçamento acima (2 = ~16px)
-                                mb: 1, // adiciona espaçamento abaixo (2 = ~16px)
                                 "& .MuiOutlinedInput-root" : {
                                  "&.Mui-focused fieldset":{
                                         borderColor: email.length > 0 && emailValid ? "green" : undefined,
@@ -126,7 +138,7 @@ const Login: React.FC = () => {
                             error={senha.length > 0 && !senhaValid}
                             helperText={senha.length > 0 && !senhaValid ? senhaError : ""}
                             sx={{ 
-                                mt: 2,
+                                mt: 1,
                                 "& .MuiOutlinedInput-root": {
                                     "&.Mui-focused fieldset": {
                                         borderColor: senha.length > 0 && senhaValid ? "green" : undefined,
@@ -141,12 +153,13 @@ const Login: React.FC = () => {
                             type="submit"
                             variant="contained"
                             fullWidth
-                            sx={{mt: 4, background: "#B3D4F5"}}
+                            disabled={!emailValid || !senhaValid}
+                            sx={{ mt: 3, background: "#B3D4F5" }}
                         >
                             <Box display="flex" alignItems="center" gap={1}>
                                 Entrar
                             </Box>
-                        </Button>   
+                        </Button>
                     </Box>
                 </Box>
             </Paper>

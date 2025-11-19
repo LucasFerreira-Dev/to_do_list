@@ -22,12 +22,12 @@ const passwordSchema = z
 .regex(/[^A-Za-z0-9]/, "A senha deve conter ao menos um caractere especial");
 
 const LoginCadastrar: React.FC = () => {
-    // estados para email, senha e mensagem de erro
+        // estados para email, senha e mensagem de erro
     const [email, setEmail] = useState("");
     const [senha, setSenha] = useState("");
     const [error, setError] = useState("");
-
     const [username, setUsername] = useState("");
+    const [success, setSuccess] = useState("");
 
     // validações usando zod
     const emailValid = emailSchema.safeParse(email).success;
@@ -37,16 +37,18 @@ const LoginCadastrar: React.FC = () => {
     const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
 
-        if (!emailValid || !senhaValid) {
+        if (!emailValid || !senhaValid || username.trim() === "") {
             setError("Preencha os campos corretamente.");
             return;
         }
 
         setError("");
 
+        setSuccess("Login válido!"); //confirma q enviou visualmente
+
         // Aqui você faz o login real (axios, etc.)
-        alert("Login válido!");
-        };
+        
+    };
 
     return (
         <Box
@@ -60,7 +62,7 @@ const LoginCadastrar: React.FC = () => {
                 borderRadius: '8',
             }}
         >
-            <Paper elevation={3} sx={{ p: 4, minWidth: 300, position: "relative", overflow: "visible"}}>
+            <Paper elevation={3} sx={{ p: 4 , position: "relative", overflow: "visible"}}>
                 <Box textAlign="center" mb={2}>
                     <Box
                         sx={{
@@ -84,19 +86,29 @@ const LoginCadastrar: React.FC = () => {
                         />
                     </Box>
                     <Typography variant="h6" component="h1" fontWeight={600} mb={1}>
-                        Bem-vindo
+                        Bem-vindo testes
                     </Typography>
-                    <Typography variant="body2" color="text.secondary">
+                    <Typography variant="body2" color="text.secondary" mb={1}>
                         Faça login para acessar o sistema
                     </Typography>
                         {/* Exemplo de mensagem de erro? */}
                     {error && (
-                        <Alert severity="error" sx={{ mb: 2 }}>
-                            {error}
+                        <Alert severity="error">
+                                {error}
                         </Alert>
                     )}
-
-                    <Box component="form" onSubmit={handleSubmit}>
+                    {success && (
+                        <Alert severity="success" >
+                            {success}
+                        </Alert>
+                    )}
+                    <Box component="form" onSubmit={handleSubmit}
+                        sx={{
+                            width: "100%",
+                            maxWidth: 400, // deixa TUDO mais estreito
+                            mx: "auto",
+                        }}
+                    >
                         <TextField
                             label="Usuário"
                             type="text"
@@ -104,8 +116,7 @@ const LoginCadastrar: React.FC = () => {
                             value={username}
                             onChange={(e) => setUsername(e.target.value)}
                             sx={{
-                                mt: 1,
-                                mb: 1,
+                                mt:2,
                                 "& .MuiOutlinedInput-root": {
                                     "&.Mui-focused fieldset": {
                                         borderColor: "green",
@@ -125,9 +136,9 @@ const LoginCadastrar: React.FC = () => {
                             onChange={(e) => setEmail(e.target.value)}
                             error={email.length > 0 && !emailValid}
                             helperText={!emailValid && email.length > 0 ? "Email inválido" : ""}   
+                            FormHelperTextProps={{ style: { minHeight: 22 } }}
                             sx={{ 
-                                mt: 1 , // adiciona espaçamento acima (2 = ~16px)
-                                mb: 1, // adiciona espaçamento abaixo (2 = ~16px)
+                                mt:2,
                                 "& .MuiOutlinedInput-root" : {
                                  "&.Mui-focused fieldset":{
                                         borderColor: email.length > 0 && emailValid ? "green" : undefined,
@@ -147,8 +158,9 @@ const LoginCadastrar: React.FC = () => {
                             onChange={(e) => setSenha(e.target.value)}
                             error={senha.length > 0 && !senhaValid}
                             helperText={senha.length > 0 && !senhaValid ? senhaError : ""}
+                            FormHelperTextProps={{ style: { minHeight: 22 } }}
                             sx={{ 
-                                mt: 2,
+                                mt:2,
                                 "& .MuiOutlinedInput-root": {
                                     "&.Mui-focused fieldset": {
                                         borderColor: senha.length > 0 && senhaValid ? "green" : undefined,
@@ -163,12 +175,17 @@ const LoginCadastrar: React.FC = () => {
                             type="submit"
                             variant="contained"
                             fullWidth
-                            sx={{mt: 4, background: "#B3D4F5"}}
+                            disabled={!emailValid || !senhaValid || !username}
+                            sx={{
+                                mt: 3,
+                                background: "#B3D4F5",
+                            }}
                         >
                             <Box display="flex" alignItems="center" gap={1}>
                                 Entrar
                             </Box>
-                        </Button>   
+                        </Button>
+
                     </Box>
                 </Box>
             </Paper>
