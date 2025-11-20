@@ -79,7 +79,7 @@ const LoginCadastrar: React.FC = () => {
                             color: "#fff",
                         }}
                     >
-                         <img
+                        <img
                             src={logoImg}
                             alt="Logo"
                             style={{ width: "80%", height: "80%", objectFit: "cover" }}
