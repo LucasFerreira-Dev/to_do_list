@@ -1,6 +1,7 @@
 import React from "react";
 import logoImg from "../assets/logo.png"
 import pagAtividade from "../assets/pagAtividades.png"
+import pagLogin from "../assets/pagLogin.png"
 import { useNavigate } from "react-router-dom"; //para as rotas funcionar
 import { 
     Box,
@@ -10,48 +11,47 @@ import {
 
 const Index: React.FC = () => {
 
-    const navigate = useNavigate(); // 👈 criar a função de navegação utilizando rotas
+    const navigate = useNavigate(); // criar a função de navegação utilizando rotas
 
     return(
         <Box
             sx={{ //background
-                backgroundColor: "#FFFFFF",  
                 display: 'flex',
                 flexDirection: 'column',
                 justifyContent: 'center',
                 alignItems: 'center',
                 minHeight: '100vh',
                 width: '100%',
-                borderRadius: '8',
             }}
         >
             <Box //nave
                 sx={{
                     display: 'flex',
-                    minHeight: '20vh',
+                    minHeight: '9vh',
                     alignItems: 'center',
                     width: '100%',
                     justifyContent: "space-between", // espalha um para cada lado
                 }}
             >
                 <Box //inicio
-                    sx={{
-                        backgroundColor: "#ffffffff",  
+                    sx={{ 
                         display: 'flex',
-                        justifyContent: 'flex-start',
-                        alignItems: 'flex-start',
+                        justifyContent: 'flex-end',
+                        alignItems: 'flex-end',
                         width: 'auto',
+                        minHeight: '10vh',
+                        minWidth: '8vw',
+                        padding:1, 
                     }}
                 >
                     <Box //local da logo
                         sx={{
-                            backgroundColor: "#ffffffff",  
                             display: 'flex',
                             flexDirection: 'column',
                             justifyContent: 'center',
                             alignItems: 'center',
-                            minHeight: '20vh',
-                            width: '20%',
+                            minHeight: '10vh',
+                            width: 'auto',
                         }}
                     >
                         <Box //logo
@@ -83,7 +83,6 @@ const Index: React.FC = () => {
                                 width: "8vw",
                                 height: "3dvh",
                                 mx: "auto",
-                                background: "#ffffffff",
                                 borderRadius: 2,
                                 display: "flex",
                                 alignItems: "center",
@@ -138,7 +137,6 @@ const Index: React.FC = () => {
 
             <Box //main
                 sx={{
-                    //backgroundColor: "#800c8fff", 
                     display: 'flex',
                     flexDirection: 'column',
                     justifyContent: 'center',
@@ -151,7 +149,6 @@ const Index: React.FC = () => {
             >   
                 <Box //1 conteudo
                     sx={{
-                        //backgroundColor: "#ffffffff", 
                         display: 'flex',
                         justifyContent: 'center',
                         alignItems: 'center',
@@ -163,7 +160,6 @@ const Index: React.FC = () => {
                 >
                     <Box // texto
                         sx={{
-                            //backgroundColor: "#ffffffff", 
                             display: 'flex',
                             flexDirection: 'column',
                             justifyContent: 'center',
@@ -198,7 +194,7 @@ const Index: React.FC = () => {
                             </Typography>
                         </Button>
                     </Box>
-                    <Box // ilustração
+                    <Box // ilustração com a pag de atividades
                         sx={{
                             backgroundColor: "rgba(94, 114, 195, 0.58)", 
                             display: 'flex',
@@ -212,30 +208,174 @@ const Index: React.FC = () => {
                     >
                         <img
                             src={pagAtividade}
-                            alt="Logo"
+                            alt="pagina com as atividades"
                             style={{ width: "90%", height: "90%", objectFit: "cover", borderRadius: 8 }}
                         />
                     </Box>
                 </Box>
-                <Box
+                <Box // texto ilustrativo
                     sx={{
-                        backgroundColor: "#0c8f63ff", 
                         display: 'flex',
                         justifyContent: 'center',
                         alignItems: 'center',
-                        minHeight: '100vh',
+                        width: '99%',
+                        borderRadius: '2',
+                        minHeight: '28vh',
+                    }}
+                >
+                    <Box //1 frase
+                        sx={{
+                            display: 'flex',
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                            "&:hover": { backgroundColor: "#B3D4F5" , color:"white"},
+                            borderRadius: 3,
+                            width: '16vw',
+                            minHeight: '11vh',
+                        }}
+                    >
+                        <Typography variant="h5" fontWeight={600} >
+                            Organize seu <br/>dia em segundos.
+                        </Typography>
+                    </Box>
+                    <Box //2 frase
+                        sx={{
+                            display: 'flex',
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                            "&:hover": { backgroundColor: "#B3D4F5" , color:"white"},
+                            borderRadius: 3,
+                            width: '16vw',
+                            minHeight: '11vh',
+                        }}
+                    >
+                        <Typography variant="h5" fontWeight={600} >
+                            Tarefas claras, <br/>mente tranquila.
+                        </Typography>
+                    </Box>
+                    <Box //3 frase
+                        sx={{
+                            display: 'flex',
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                            "&:hover": { backgroundColor: "#B3D4F5" , color:"white"},
+                            borderRadius: 3,
+                            width: '16vw',
+                            minHeight: '11vh',
+                        }}
+                    >
+                        <Typography variant="h5" fontWeight={600} >
+                            Anote, faça, <br/>conclua.
+                        </Typography>
+                    </Box>
+                </Box>
+                <Box // ilustração com a pag de login
+                    sx={{
+                        display: 'flex',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        minHeight: '60vh',
                         width: '99%',
                         borderRadius: '2',
                         margin: 1,
                     }}
                 >
-                    <Typography variant="h6" component="h6" fontWeight={600} >
-                        vazio
-                    </Typography>
+                    <Box // ilustração com a pag de login
+                        sx={{
+                            backgroundColor: "rgba(94, 114, 195, 0.58)",  // no figma uso o #E9E9E9
+                            display: 'flex',
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                            minHeight: '65vh',
+                            width: '50%',
+                            borderRadius: 8,
+                            margin: 1,
+                        }}
+                    >
+                        <img
+                            src={pagLogin}
+                            alt="pagina com as atividades"
+                            style={{ width: "90%", height: "90%", objectFit: "cover", borderRadius: 8 }}
+                        />
+                    </Box>
+                    <Box // texto
+                        sx={{
+                            display: 'flex',
+                            flexDirection: 'column',
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                            minHeight: '70vh',
+                            width: '50%',
+                            margin: 1,
+                        }}
+                    >
+                        <Typography variant="h3" component="h6" fontWeight={600} 
+                            sx={{ textAlign: "center", maxWidth: "40vw" }}
+                        >
+                            Faça login e organize sua rotina com facilidade
+                        </Typography>
+                        <Typography variant="h6" component="h6" fontWeight={600} 
+                            sx={{ textAlign: "center", maxWidth: "30vw" }}
+                        >
+                            Acesse sua conta e tenha controle total do seu dia.
+                        </Typography>
+                    </Box>
                 </Box>
-                
-
-                {/*Irá conter o conteudo do site*/}
+                <Box // texto ilustrativo
+                    sx={{
+                        display: 'flex',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        width: '99%',
+                        borderRadius: '2',
+                    }}
+                >
+                    <Box //1 frase
+                        sx={{
+                            display: 'flex',
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                            minHeight: '16vh',
+                            "&:hover": { backgroundColor: "#B3D4F5" , color:"white"},
+                            borderRadius: 3,
+                            width: '20vw',
+                        }}
+                    >
+                        <Typography variant="h5" fontWeight={600} >
+                            Entre e comece a <br/>transformar suas tarefas <br/>em resultados.
+                        </Typography>
+                    </Box>
+                    <Box //2 frase
+                        sx={{
+                            display: 'flex',
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                            minHeight: '16vh',
+                            "&:hover": { backgroundColor: "#B3D4F5" , color:"white"},
+                            borderRadius: 3,
+                            width: '20vw',
+                        }}
+                    >
+                        <Typography variant="h5" fontWeight={600} >
+                            Planeje suas tarefas, <br/>não suas preocupações.
+                        </Typography>
+                    </Box>
+                    <Box //3 frase
+                        sx={{
+                            display: 'flex',
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                            minHeight: '16vh',
+                            "&:hover": { backgroundColor: "#B3D4F5" , color:"white"},
+                            borderRadius: 3,
+                            width: '20vw',
+                        }}
+                    >
+                        <Typography variant="h5" fontWeight={600} >
+                            Gestão inteligente <br/>do seu tempo.
+                        </Typography>
+                    </Box>
+                </Box>
             </Box>
         </Box>
     )

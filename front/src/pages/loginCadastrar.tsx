@@ -22,7 +22,7 @@ const passwordSchema = z
 .regex(/[^A-Za-z0-9]/, "A senha deve conter ao menos um caractere especial");
 
 const LoginCadastrar: React.FC = () => {
-        // estados para email, senha e mensagem de erro
+    // estados para email, senha e mensagem de erro
     const [email, setEmail] = useState("");
     const [senha, setSenha] = useState("");
     const [error, setError] = useState("");
