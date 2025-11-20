@@ -75,7 +75,7 @@ const Config: React.FC<ConfigProps> = ({
           top: 0,
           bottom: 0,
           zIndex: 1200,
-          width: { xs: "100%", md: 72 }, // largura colapsada em md
+          width: { xs: "100%", md: 150 }, // largura colapsada em md
           height: { xs: 64, md: "100vh" },
           transition: "width 220ms ease",
           bgcolor: "#cfe9ff",
@@ -86,7 +86,7 @@ const Config: React.FC<ConfigProps> = ({
           py: { xs: 0, md: 2 },
           boxShadow: "inset -1px 0 0 rgba(0,0,0,0.06)",
           "&:hover": {
-            width: { md: 220 }, // expande ao passar o mouse (mantive a sua ideia)
+            width: { md: 250 }, // expande ao passar o mouse (mantive a sua ideia)
             "& .sidebarLabel": {
               opacity: 1,
             },
@@ -108,9 +108,11 @@ const Config: React.FC<ConfigProps> = ({
             src={logoPath}
             alt="logo"
             style={{
-              height: 40,
+              height: 100,
               width: "auto",
               display: "block",
+              marginLeft: "10px",
+
             }}
           />
         </Box>
@@ -128,12 +130,12 @@ const Config: React.FC<ConfigProps> = ({
             aria-label="configurações"
             size="large"
             sx={{
-              borderRadius: 2,
-              px: 1.2,
+              borderRadius: 5,
+              px: 2.1,
               py: 0.7,
               bgcolor: "#bfe1ff",
               "&:hover": { bgcolor: "#bfe1ff" },
-              ml: { xs: "auto", md: 1 },
+              ml: { xs: "auto", md: 3 },
             }}
           >
             <SettingsIcon />
