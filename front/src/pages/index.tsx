@@ -234,7 +234,9 @@ const Index: React.FC = () => {
                             minHeight: '11vh',
                         }}
                     >
-                        <Typography variant="h5" fontWeight={600} >
+                        <Typography variant="h5" fontWeight={600} 
+                            sx={{ textAlign: "center"}}
+                        >
                             Organize seu <br/>dia em segundos.
                         </Typography>
                     </Box>
@@ -249,7 +251,9 @@ const Index: React.FC = () => {
                             minHeight: '11vh',
                         }}
                     >
-                        <Typography variant="h5" fontWeight={600} >
+                        <Typography variant="h5" fontWeight={600} 
+                            sx={{ textAlign: "center"}}
+                        >
                             Tarefas claras, <br/>mente tranquila.
                         </Typography>
                     </Box>
@@ -264,7 +268,9 @@ const Index: React.FC = () => {
                             minHeight: '11vh',
                         }}
                     >
-                        <Typography variant="h5" fontWeight={600} >
+                        <Typography variant="h5" fontWeight={600} 
+                            sx={{ textAlign: "center"}}
+                        >
                             Anote, faça, <br/>conclua.
                         </Typography>
                     </Box>
@@ -341,7 +347,9 @@ const Index: React.FC = () => {
                             width: '20vw',
                         }}
                     >
-                        <Typography variant="h5" fontWeight={600} >
+                        <Typography variant="h5" fontWeight={600} 
+                            sx={{ textAlign: "center"}}
+                        >
                             Entre e comece a <br/>transformar suas tarefas <br/>em resultados.
                         </Typography>
                     </Box>
@@ -356,7 +364,9 @@ const Index: React.FC = () => {
                             width: '20vw',
                         }}
                     >
-                        <Typography variant="h5" fontWeight={600} >
+                        <Typography variant="h5" fontWeight={600} 
+                            sx={{ textAlign: "center"}}
+                        >
                             Planeje suas tarefas, <br/>não suas preocupações.
                         </Typography>
                     </Box>
@@ -371,7 +381,9 @@ const Index: React.FC = () => {
                             width: '20vw',
                         }}
                     >
-                        <Typography variant="h5" fontWeight={600} >
+                        <Typography variant="h5" fontWeight={600} 
+                            sx={{ textAlign: "center"}}
+                        >
                             Gestão inteligente <br/>do seu tempo.
                         </Typography>
                     </Box>
