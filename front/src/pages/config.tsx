@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
   Box,
   Paper,
@@ -7,251 +7,301 @@ import {
   Button,
   IconButton,
   InputAdornment,
+  useTheme,
+  useMediaQuery,
 } from "@mui/material";
 import SettingsIcon from "@mui/icons-material/Settings";
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import SaveIcon from "@mui/icons-material/Save";
+import CheckCircleIcon from "@mui/icons-material/CheckCircle";
+import ErrorOutlineIcon from "@mui/icons-material/ErrorOutline";
 import logoImg from "../assets/logo.png";
+
+type Message = { type: "success" | "error" | "info"; text: string } | null;
 
 type ConfigProps = {
   logoPath?: string;
 };
 
-const Config: React.FC<ConfigProps> = ({
-    logoPath = logoImg,
-}) => {
-    // estados para os campos do formulário
+const COLLAPSED = 64;
+const EXPANDED = 200;
+
+const Config: React.FC<ConfigProps> = ({ logoPath = logoImg }) => {
+  const theme = useTheme();
+  const mdUp = useMediaQuery(theme.breakpoints.up("md"));
+
   const [name, setName] = useState<string>("");
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
 
+  const [isOpen, setIsOpen] = useState<boolean>(false);
+  const [message, setMessage] = useState<Message>(null);
+
+  // ✨ IDENTIFICADOR DE CLICK
+  const [activeSidebar, setActiveSidebar] = useState<"settings" | "back">(
+    "settings"
+  );
+
+  const initialRef = useRef({ name: "", email: "", password: "" });
+
+  // ========= CARREGAR USUÁRIO =========
+  useEffect(() => {
+    let mounted = true;
+    (async () => {
+      try {
+        const res = await fetch("/api/user");
+        if (!res.ok) throw new Error("Erro ao carregar");
+        const data = await res.json();
+
+        if (!mounted) return;
+
+        setName(data.name ?? "");
+        setEmail(data.email ?? "");
+
+        initialRef.current = {
+          name: data.name ?? "",
+          email: data.email ?? "",
+          password: "",
+        };
+      } catch {
+        setMessage({ type: "error", text: "Falha ao carregar usuário." });
+      }
+    })();
+
+    return () => {
+      mounted = false;
+    };
+  }, []);
+
+  // ========= LIMPAR BANNER =========
+  useEffect(() => {
+    if (!message) return;
+    const t = setTimeout(() => setMessage(null), 5000);
+    return () => clearTimeout(t);
+  }, [message]);
+
+  const dirty =
+    name !== initialRef.current.name ||
+    email !== initialRef.current.email ||
+    password !== initialRef.current.password;
+
   const handleSave = async () => {
     if (!name.trim() || !email.trim()) {
-      alert("Preencha nome e usuário (e-mail).");
+      setMessage({
+        type: "error",
+        text: "Preencha nome e e-mail.",
+      });
       return;
     }
+
     setLoading(true);
+
     try {
       const res = await fetch("/api/user", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ name, email, password }),
       });
-      if (!res.ok) {
-        const text = await res.text();
-        throw new Error(text || "Erro ao salvar");
-      }
-      const data = await res.json();
-      console.log("Salvo:", data);
-      alert("Informações salvas com sucesso.");
-    } catch (err: unknown) {
-      console.error(err);
-      const message = err instanceof Error ? err.message : String(err);
-      alert("Falha ao salvar: " + message);
+
+      if (!res.ok) throw new Error("Falha no servidor.");
+
+      setMessage({ type: "success", text: "Informações atualizadas!" });
+      initialRef.current = { name, email, password: "" };
+      setPassword("");
+    } catch {
+      setMessage({ type: "error", text: "Erro ao salvar." });
     } finally {
       setLoading(false);
     }
   };
 
+  // Sidebar abre apenas em telas grandes
+  const computedIsOpen = mdUp ? isOpen : true;
+  const sidebarWidth = computedIsOpen ? EXPANDED : COLLAPSED;
+
   return (
     <Box
       sx={{
         display: "flex",
-        minHeight: "100vh",
-        width: "100vw",        // garante ocupar toda a largura da viewport
+        minHeight: "100dvh",
         bgcolor: "#f4f5f6",
-        overflowX: "hidden",   // evita barras horizontais quando sidebar expande
       }}
     >
-      {/* Sidebar — fixa em md+ para ficar encostada no canto esquerdo */}
+      {/* =================== SIDEBAR =================== */}
       <Box
         component="aside"
+        onMouseEnter={() => mdUp && setIsOpen(true)}
+        onMouseLeave={() => mdUp && setIsOpen(false)}
         sx={{
-          position: { xs: "relative", md: "fixed" }, // fixada no canto em desktop
+          position: "fixed",
           left: 0,
           top: 0,
-          bottom: 0,
-          zIndex: 1200,
-          width: { xs: "100%", md: 150 }, // largura colapsada em md
-          height: { xs: 64, md: "100vh" },
-          transition: "width 220ms ease",
+          width: sidebarWidth,
+          height: "100dvh",
           bgcolor: "#cfe9ff",
+          transition: "width 220ms ease",
           display: "flex",
-          flexDirection: { xs: "row", md: "column" },
+          flexDirection: "column",
           alignItems: "center",
-          px: { xs: 2, md: 1 },
-          py: { xs: 0, md: 2 },
-          boxShadow: "inset -1px 0 0 rgba(0,0,0,0.06)",
-          "&:hover": {
-            width: { md: 250 }, // expande ao passar o mouse (mantive a sua ideia)
-            "& .sidebarLabel": {
-              opacity: 1,
-            },
-          },
+          py: 2,
+          px: 1,
+          boxShadow: "2px 0 6px rgba(0,0,0,0.08)",
+          zIndex: 1000,
         }}
       >
-        <Box
-          sx={{
-            display: "flex",
-            alignItems: "center",
-            justifyContent: { xs: "flex-start", md: "flex-start" },
-            width: { xs: "auto", md: "100%" },
-            mb: { xs: 0, md: 3 },
-            mr: { xs: 2, md: 0 },
-            mt: { xs: 0, md: 1 },
-          }}
-        >
-          <img
-            src={logoPath}
-            alt="logo"
-            style={{
-              height: 100,
-              width: "auto",
-              display: "block",
-              marginLeft: "10px",
-
-            }}
-          />
+        {/* LOGO */}
+        <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+          <Box component="img" src={logoPath} sx={{ width: 48, height: 48 }} />
+          {computedIsOpen && (
+            <Typography sx={{ fontWeight: 600 }}>Meu App</Typography>
+          )}
         </Box>
 
-        <Box
-          sx={{
-            display: "flex",
-            alignItems: "center",
-            justifyContent: { xs: "flex-end", md: "flex-start" },
-            width: { xs: "100%", md: "100%" },
-            mt: { xs: 0, md: 1 },
-          }}
-        >
+        {/* BOTÃO CONFIG */}
+        <Box sx={{ mt: 4, width: "100%", textAlign: "center" }}>
           <IconButton
-            aria-label="configurações"
-            size="large"
+            onClick={() => setActiveSidebar("settings")}
             sx={{
-              borderRadius: 5,
-              px: 2.1,
-              py: 0.7,
-              bgcolor: "#bfe1ff",
-              "&:hover": { bgcolor: "#bfe1ff" },
-              ml: { xs: "auto", md: 3 },
+              bgcolor:
+                activeSidebar === "settings" ? "#9fd6ff" : "#bfe1ff",
+              "&:hover": { bgcolor: "#9fd6ff" },
+              borderRadius: 3,
+              width: "100%",
             }}
           >
             <SettingsIcon />
           </IconButton>
 
-          <Typography
-            component="span"
-            className="sidebarLabel"
+          {computedIsOpen && (
+            <Typography sx={{ mt: 1 }}>Configurações</Typography>
+          )}
+        </Box>
+
+        <Box sx={{ flexGrow: 1 }} />
+
+        {/* BOTÃO VOLTAR — FIXO NO RODAPÉ */}
+        <Box sx={{ width: "100%", mb: 2, textAlign: "center" }}>
+          <IconButton
+            onClick={() => {
+              setActiveSidebar("back");
+              window.history.back();
+            }}
             sx={{
-              ml: 1,
-              display: { xs: "none", md: "block" },
-              whiteSpace: "nowrap",
-              overflow: "hidden",
-              textOverflow: "ellipsis",
-              opacity: 0,
-              transition: "opacity 220ms ease",
+              bgcolor: activeSidebar === "back" ? "#9fd6ff" : "#bfe1ff",
+              "&:hover": { bgcolor: "#9fd6ff" },
+              borderRadius: 3,
+              width: "100%",
             }}
           >
-            Configurações
-          </Typography>
+            <ArrowBackIcon />
+          </IconButton>
+
+          {computedIsOpen && <Typography sx={{ mt: 1 }}>Voltar</Typography>}
         </Box>
       </Box>
 
-      {/* Conteúdo principal */}
+      {/* =================== CONTEÚDO =================== */}
       <Box
         sx={{
           flexGrow: 1,
-          p: { xs: 2, md: 4 },
+          ml: `${COLLAPSED}px`,
+          p: 3,
           display: "flex",
           justifyContent: "center",
-          alignItems: "flex-start",
+          alignItems: "center",
           width: "100%",
-          ml: { xs: 0, md: "220px" },
         }}
       >
         <Paper
-          elevation={8}
+          elevation={6}
           sx={{
-            width: "min(560px, 90%)",
+            width: { xs: "145%", sm: "100%", md: "90%", lg: "75%" },
+            p: 4,
             borderRadius: 2,
-            p: { xs: 3, md: 4 },
-            mt: { xs: 3, md: 6 },
-            position: "relative",
-            boxShadow: "8px 8px 0 rgba(0,0,0,0.12)",
           }}
         >
-          <Typography variant="h5" align="center" sx={{ fontWeight: 700, mb: 3 }}>
+          <Typography
+            variant="h5"
+            align="center"
+            sx={{ mb: 3, fontWeight: 700 }}
+          >
             Editar informações
           </Typography>
 
-          <Box component="form" noValidate autoComplete="off" sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
-            <Box>
-              <Typography variant="subtitle1" sx={{ fontWeight: 600, mb: 0.5 }}>
-                Nome
-              </Typography>
-              <TextField 
-              fullWidth 
-              size="small" 
-              value={name} 
-              onChange={(e) => setName(e.target.value)} 
-              placeholder="Usuario" />
-
+          {/* ✨ BANNER ESTILIZADO (SEM ALERTA ANTIGO) */}
+          {message && (
+            <Box
+              sx={{
+                p: 1.5,
+                borderRadius: 2,
+                mb: 2,
+                display: "flex",
+                gap: 1,
+                alignItems: "center",
+                bgcolor:
+                  message.type === "success"
+                    ? "rgba(220, 250, 230)"
+                    : "rgba(255, 230, 230)",
+              }}
+            >
+              {message.type === "success" ? (
+                <CheckCircleIcon color="success" />
+              ) : (
+                <ErrorOutlineIcon color="error" />
+              )}
+              <Typography>{message.text}</Typography>
             </Box>
+          )}
 
-            <Box>
-              <Typography variant="subtitle1" sx={{ fontWeight: 600, mb: 0.5 }}>
-                Usuário
-              </Typography>
-              <TextField
-                fullWidth
-                size="small"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                placeholder="Email"
-                type="email"
-              />
-            </Box>
+          {/* FORM */}
+          <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
+            <TextField
+              label="Nome"
+              fullWidth
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+            />
 
-            <Box>
-              <Typography variant="subtitle1" sx={{ fontWeight: 600, mb: 0.5 }}>
-                Senha
-              </Typography>
-              <TextField
-                fullWidth
-                size="small"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                placeholder="Senha"
-                type={showPassword ? "text" : "password"}
-                InputProps={{
-                  endAdornment: (
-                    <InputAdornment position="end">
-                      <IconButton aria-label="toggle password visibility" onClick={() => setShowPassword((s) => !s)} edge="end" size="small">
-                        {showPassword ? <VisibilityOff /> : <Visibility />}
-                      </IconButton>
-                    </InputAdornment>
-                  ),
-                }}
-              />
-            </Box>
+            <TextField
+              label="Usuário"
+              type="email"
+              fullWidth
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+            />
 
-            <Box sx={{ display: "flex", justifyContent: "center", mt: 2 }}>
-              <Button
-                variant="contained"
-                startIcon={<SaveIcon />}
-                onClick={handleSave}
-                disabled={loading}
-                sx={{
-                  textTransform: "none",
-                  px: 5,
-                  boxShadow: "4px 6px 0 rgba(0,0,0,0.12)",
-                }}
-              >
-                Salvar
-              </Button>
-            </Box>
+            <TextField
+              label="Senha"
+              type={showPassword ? "text" : "password"}
+              fullWidth
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              InputProps={{
+                endAdornment: (
+                  <InputAdornment position="end">
+                    <IconButton
+                      onClick={() => setShowPassword(!showPassword)}
+                    >
+                      {showPassword ? <VisibilityOff /> : <Visibility />}
+                    </IconButton>
+                  </InputAdornment>
+                ),
+              }}
+            />
+
+            <Button
+              variant="contained"
+              startIcon={<SaveIcon />}
+              sx={{ mt: 2, px: 4 }}
+              onClick={handleSave}
+              disabled={!dirty || loading}
+            >
+              {loading ? "Salvando..." : "Salvar"}
+            </Button>
           </Box>
         </Paper>
       </Box>
