@@ -41,14 +41,12 @@ const Config: React.FC<ConfigProps> = ({ logoPath = logoImg }) => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [message, setMessage] = useState<Message>(null);
 
-  // ✨ IDENTIFICADOR DE CLICK
   const [activeSidebar, setActiveSidebar] = useState<"settings" | "back">(
     "settings"
   );
 
   const initialRef = useRef({ name: "", email: "", password: "" });
 
-  // ========= CARREGAR USUÁRIO =========
   useEffect(() => {
     let mounted = true;
     (async () => {
@@ -77,7 +75,6 @@ const Config: React.FC<ConfigProps> = ({ logoPath = logoImg }) => {
     };
   }, []);
 
-  // ========= LIMPAR BANNER =========
   useEffect(() => {
     if (!message) return;
     const t = setTimeout(() => setMessage(null), 5000);
@@ -153,21 +150,16 @@ const Config: React.FC<ConfigProps> = ({ logoPath = logoImg }) => {
           zIndex: 1000,
         }}
       >
-        {/* LOGO */}
         <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
           <Box component="img" src={logoPath} sx={{ width: 48, height: 48 }} />
-          {computedIsOpen && (
-            <Typography sx={{ fontWeight: 600 }}>Meu App</Typography>
-          )}
+          {computedIsOpen && <Typography sx={{ fontWeight: 600 }}>Meu App</Typography>}
         </Box>
 
-        {/* BOTÃO CONFIG */}
         <Box sx={{ mt: 4, width: "100%", textAlign: "center" }}>
           <IconButton
             onClick={() => setActiveSidebar("settings")}
             sx={{
-              bgcolor:
-                activeSidebar === "settings" ? "#9fd6ff" : "#bfe1ff",
+              bgcolor: activeSidebar === "settings" ? "#9fd6ff" : "#bfe1ff",
               "&:hover": { bgcolor: "#9fd6ff" },
               borderRadius: 3,
               width: "100%",
@@ -176,14 +168,11 @@ const Config: React.FC<ConfigProps> = ({ logoPath = logoImg }) => {
             <SettingsIcon />
           </IconButton>
 
-          {computedIsOpen && (
-            <Typography sx={{ mt: 1 }}>Configurações</Typography>
-          )}
+          {computedIsOpen && <Typography sx={{ mt: 1 }}>Configurações</Typography>}
         </Box>
 
         <Box sx={{ flexGrow: 1 }} />
 
-        {/* BOTÃO VOLTAR — FIXO NO RODAPÉ */}
         <Box sx={{ width: "100%", mb: 2, textAlign: "center" }}>
           <IconButton
             onClick={() => {
@@ -208,20 +197,36 @@ const Config: React.FC<ConfigProps> = ({ logoPath = logoImg }) => {
       <Box
         sx={{
           flexGrow: 1,
-          ml: `${COLLAPSED}px`,
+          // usa a largura atual da sidebar para o offset (evita sobreposição)
+          ml: `${sidebarWidth}px`,
           p: 3,
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
           width: "100%",
+          // GRID: colunas responsivas -> grande espaço em branco (1fr) + coluna fixa para o card (480px)
+          display: "grid",
+          gridTemplateColumns: { xs: "1fr", md: "1fr 1000px" },
+          gap: 4,
+          alignItems: "center", // centraliza verticalmente o conteúdo nas telas maiores
         }}
       >
+        {/* Espaço grande à esquerda (coluna 1) - você pode colocar conteúdo ali no futuro */}
+        <Box
+          sx={{
+            // deixa visual limpo; pode remover se quiser conteúdo real à esquerda
+            height: { xs: "auto", md: "80vh" },
+            display: { xs: "none", md: "block" },
+          }}
+        />
+
+        {/* PAPER (formulário) posicionado na coluna 2 em md+, e ocupa a única coluna em xs */}
         <Paper
           elevation={6}
           sx={{
-            width: { xs: "145%", sm: "100%", md: "90%", lg: "75%" },
+            gridColumn: { xs: 1, md: 2 },
+            width: "100%",
+            maxWidth: "450px",
             p: 4,
             borderRadius: 2,
+            alignSelf: "center", // centraliza verticalmente dentro da grid cell
           }}
         >
           <Typography
@@ -232,7 +237,7 @@ const Config: React.FC<ConfigProps> = ({ logoPath = logoImg }) => {
             Editar informações
           </Typography>
 
-          {/* ✨ BANNER ESTILIZADO (SEM ALERTA ANTIGO) */}
+          {/* BANNER DE MENSAGEM */}
           {message && (
             <Box
               sx={{
@@ -257,7 +262,7 @@ const Config: React.FC<ConfigProps> = ({ logoPath = logoImg }) => {
             </Box>
           )}
 
-          {/* FORM */}
+          {/* FORMULÁRIO */}
           <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
             <TextField
               label="Nome"
@@ -283,9 +288,7 @@ const Config: React.FC<ConfigProps> = ({ logoPath = logoImg }) => {
               InputProps={{
                 endAdornment: (
                   <InputAdornment position="end">
-                    <IconButton
-                      onClick={() => setShowPassword(!showPassword)}
-                    >
+                    <IconButton onClick={() => setShowPassword(!showPassword)}>
                       {showPassword ? <VisibilityOff /> : <Visibility />}
                     </IconButton>
                   </InputAdornment>
