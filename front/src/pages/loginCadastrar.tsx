@@ -86,7 +86,7 @@ const LoginCadastrar: React.FC = () => {
                         />
                     </Box>
                     <Typography variant="h6" component="h1" fontWeight={600} mb={1}>
-                        Bem-vindo testes
+                        Bem-vindo
                     </Typography>
                     <Typography variant="body2" color="text.secondary" mb={1}>
                         Faça login para acessar o sistema
