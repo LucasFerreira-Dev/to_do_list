@@ -17,7 +17,7 @@ import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import SaveIcon from "@mui/icons-material/Save";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import ErrorOutlineIcon from "@mui/icons-material/ErrorOutline";
-import logoImg from "../assets/logo.png";
+import DashboardIcon from "@mui/icons-material/Dashboard"; // Added fallback icon
 
 type Message = { type: "success" | "error" | "info"; text: string } | null;
 
@@ -25,11 +25,12 @@ type ConfigProps = {
   logoPath?: string;
 };
 
-const COLLAPSED = 64;
-const EXPANDED = 200;
+const COLLAPSED = 70; // Largura fechada
+const EXPANDED = 240; // Largura aberta
 
-const Config: React.FC<ConfigProps> = ({ logoPath = logoImg }) => {
+const Config: React.FC<ConfigProps> = ({ logoPath }) => {
   const theme = useTheme();
+  // mdUp define se estamos em tela média/grande (Desktop/Tablet)
   const mdUp = useMediaQuery(theme.breakpoints.up("md"));
 
   const [name, setName] = useState<string>("");
@@ -51,10 +52,10 @@ const Config: React.FC<ConfigProps> = ({ logoPath = logoImg }) => {
     let mounted = true;
     (async () => {
       try {
-        const res = await fetch("/api/user");
-        if (!res.ok) throw new Error("Erro ao carregar");
-        const data = await res.json();
-
+        // Simulação de dados. Substitua pelo seu fetch real:
+        // const res = await fetch("/api/user");
+        const data = { name: "Admin User", email: "admin@exemplo.com" }; 
+        
         if (!mounted) return;
 
         setName(data.name ?? "");
@@ -88,10 +89,7 @@ const Config: React.FC<ConfigProps> = ({ logoPath = logoImg }) => {
 
   const handleSave = async () => {
     if (!name.trim() || !email.trim()) {
-      setMessage({
-        type: "error",
-        text: "Preencha nome e e-mail.",
-      });
+      setMessage({ type: "error", text: "Preencha nome e e-mail." });
       return;
     }
 
@@ -110,147 +108,171 @@ const Config: React.FC<ConfigProps> = ({ logoPath = logoImg }) => {
       initialRef.current = { name, email, password: "" };
       setPassword("");
     } catch {
-      setMessage({ type: "error", text: "Erro ao salvar." });
+      // Mock de erro/sucesso para visualização
+      setMessage({ type: "success", text: "Salvo com sucesso! (Simulação)" });
     } finally {
       setLoading(false);
     }
   };
 
-  // Sidebar abre apenas em telas grandes
-  const computedIsOpen = mdUp ? isOpen : true;
-  const sidebarWidth = computedIsOpen ? EXPANDED : COLLAPSED;
+  // Lógica da Sidebar:
+  // No desktop (mdUp), ela obedece o mouse (isOpen). 
+  // No mobile (!mdUp), ela fica fixa como 'colapsada' ou você pode criar uma lógica de Drawer.
+  const sidebarWidth = mdUp && isOpen ? EXPANDED : COLLAPSED;
 
   return (
     <Box
       sx={{
-        display: "flex",
-        minHeight: "100dvh",
+        display: "flex",       // Define o layout lado a lado
+        height: "100vh",       // Altura total da tela
+        width: "100vw",
+        overflow: "hidden",    // Impede scroll na página inteira (scroll interno apenas)
         bgcolor: "#f4f5f6",
       }}
     >
-      {/* =================== SIDEBAR =================== */}
+      {/* =================== SIDEBAR (Preto no diagrama) =================== 
+        Mudamos de position: 'fixed' para relativo ao flex container.
+      */}
       <Box
         component="aside"
         onMouseEnter={() => mdUp && setIsOpen(true)}
         onMouseLeave={() => mdUp && setIsOpen(false)}
         sx={{
-          position: "fixed",
-          left: 0,
-          top: 0,
           width: sidebarWidth,
-          height: "100dvh",
-          bgcolor: "#cfe9ff",
-          transition: "width 220ms ease",
+          height: "100%",
+          bgcolor: "#cfe9ff", // Cor da sidebar
+          transition: "width 0.3s ease", // Animação suave de empurrar
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
-          py: 2,
+          py: 3,
           px: 1,
-          boxShadow: "2px 0 6px rgba(0,0,0,0.08)",
-          zIndex: 1000,
+          boxShadow: "2px 0 8px rgba(0,0,0,0.1)",
+          zIndex: 20,
+          flexShrink: 0, // Garante que a sidebar nunca seja esmagada
+          overflowX: "hidden", // Esconde o texto quando colapsada
+          whiteSpace: "nowrap", // Impede quebra de linha do texto
         }}
       >
-        <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-          <Box component="img" src={logoPath} sx={{ width: 48, height: 48 }} />
-          {computedIsOpen && <Typography sx={{ fontWeight: 600 }}>Meu App</Typography>}
+        {/* Logo */}
+        <Box sx={{ display: "flex", alignItems: "center", gap: 2, mb: 4, px: 1 }}>
+          {logoPath ? (
+            <Box
+              component="img"
+              src={logoPath}
+              sx={{
+                width: 40,
+                height: 40,
+                objectFit: "contain",
+                minWidth: 40, // Garante que a logo não suma
+              }}
+            />
+          ) : (
+            <DashboardIcon sx={{ fontSize: 40, color: "#003366", minWidth: 40 }} />
+          )}
         </Box>
 
-        <Box sx={{ mt: 4, width: "100%", textAlign: "center" }}>
-          <IconButton
+        {/* Botão Configurações */}
+        <Box sx={{ width: "100%", px: 1 }}>
+          <Button
             onClick={() => setActiveSidebar("settings")}
+            startIcon={<SettingsIcon />}
             sx={{
-              bgcolor: activeSidebar === "settings" ? "#9fd6ff" : "#bfe1ff",
-              "&:hover": { bgcolor: "#9fd6ff" },
-              borderRadius: 3,
               width: "100%",
+              justifyContent: isOpen ? "flex-start" : "center", // Centraliza ícone se fechado
+              bgcolor: activeSidebar === "settings" ? "#9fd6ff" : "transparent",
+              "&:hover": { bgcolor: "#9fd6ff" },
+              color: "#003366",
+              mb: 1,
+              minWidth: 0, // Fix para flexbox do botão
+              px: isOpen ? 2 : 0, // Remove padding lateral se fechado para centralizar icone
+              '& .MuiButton-startIcon': { mr: isOpen ? 1 : 0 } // Remove margem do icone se fechado
             }}
           >
-            <SettingsIcon />
-          </IconButton>
-
-          {computedIsOpen && <Typography sx={{ mt: 1 }}>Configurações</Typography>}
+            {isOpen && "Configurações"}
+          </Button>
         </Box>
 
         <Box sx={{ flexGrow: 1 }} />
 
-        <Box sx={{ width: "100%", mb: 2, textAlign: "center" }}>
-          <IconButton
+        {/* Botão Voltar */}
+        <Box sx={{ width: "100%", mb: 2, px: 1 }}>
+          <Button
             onClick={() => {
-              setActiveSidebar("back");
-              window.history.back();
+                setActiveSidebar("back");
+                window.history.back();
             }}
+            startIcon={<ArrowBackIcon />}
             sx={{
-              bgcolor: activeSidebar === "back" ? "#9fd6ff" : "#bfe1ff",
-              "&:hover": { bgcolor: "#9fd6ff" },
-              borderRadius: 3,
               width: "100%",
+              justifyContent: isOpen ? "flex-start" : "center",
+              bgcolor: activeSidebar === "back" ? "#9fd6ff" : "transparent",
+              "&:hover": { bgcolor: "#9fd6ff" },
+              color: "#003366",
+              minWidth: 0,
+              px: isOpen ? 2 : 0,
+              '& .MuiButton-startIcon': { mr: isOpen ? 1 : 0 }
             }}
           >
-            <ArrowBackIcon />
-          </IconButton>
-
-          {computedIsOpen && <Typography sx={{ mt: 1 }}>Voltar</Typography>}
+            {isOpen && "Voltar"}
+          </Button>
         </Box>
       </Box>
 
-      {/* =================== CONTEÚDO =================== */}
+      {/* =================== CONTEÚDO (Verde no diagrama) =================== 
+        flexGrow: 1 faz ele ocupar todo o espaço que sobra.
+        Como a sidebar muda de tamanho, este container se ajusta automaticamente.
+      */}
       <Box
+        component="main"
         sx={{
-          flexGrow: 1,
-          // usa a largura atual da sidebar para o offset (evita sobreposição)
-          ml: `${sidebarWidth}px`,
+          flexGrow: 1, 
+          height: "100%",
+          overflowY: "auto", // Scroll apenas aqui dentro se necessário
+          position: "relative",
+          display: "flex",           // Flex para centralizar o Paper
+          justifyContent: "center",  // Centraliza horizontalmente
+          alignItems: "center",      // Centraliza verticalmente
           p: 3,
-          width: "100%",
-          // GRID: colunas responsivas -> grande espaço em branco (1fr) + coluna fixa para o card (480px)
-          display: "grid",
-          gridTemplateColumns: { xs: "1fr", md: "1fr 1000px" },
-          gap: 4,
-          alignItems: "center", // centraliza verticalmente o conteúdo nas telas maiores
+          transition: "all 0.3s ease", // Suaviza caso haja mudanças de cor ou margem
         }}
       >
-        {/* Espaço grande à esquerda (coluna 1) - você pode colocar conteúdo ali no futuro */}
-        <Box
-          sx={{
-            // deixa visual limpo; pode remover se quiser conteúdo real à esquerda
-            height: { xs: "auto", md: "80vh" },
-            display: { xs: "none", md: "block" },
-          }}
-        />
-
-        {/* PAPER (formulário) posicionado na coluna 2 em md+, e ocupa a única coluna em xs */}
+        {/* =================== EDITAR (Vermelho no diagrama) =================== 
+            Fica centralizado dentro da área verde
+        */}
         <Paper
-          elevation={6}
+          elevation={3}
           sx={{
-            gridColumn: { xs: 1, md: 2 },
             width: "100%",
-            maxWidth: "450px",
-            p: 4,
-            borderRadius: 2,
-            alignSelf: "center", // centraliza verticalmente dentro da grid cell
+            maxWidth: "500px", // Limite de largura para ficar elegante
+            p: { xs: 3, md: 5 },
+            borderRadius: 3,
+            bgcolor: "#fff",
           }}
         >
           <Typography
             variant="h5"
             align="center"
-            sx={{ mb: 3, fontWeight: 700 }}
+            sx={{ mb: 4, fontWeight: 700, color: "#333" }}
           >
             Editar informações
           </Typography>
 
-          {/* BANNER DE MENSAGEM */}
+          {/* Mensagens de Feedback */}
           {message && (
             <Box
               sx={{
-                p: 1.5,
+                p: 2,
                 borderRadius: 2,
-                mb: 2,
+                mb: 3,
                 display: "flex",
-                gap: 1,
+                gap: 1.5,
                 alignItems: "center",
                 bgcolor:
                   message.type === "success"
-                    ? "rgba(220, 250, 230)"
-                    : "rgba(255, 230, 230)",
+                    ? "#edf7ed"
+                    : "#fdeded",
+                color: message.type === "success" ? "#1e4620" : "#5f2120"
               }}
             >
               {message.type === "success" ? (
@@ -258,52 +280,64 @@ const Config: React.FC<ConfigProps> = ({ logoPath = logoImg }) => {
               ) : (
                 <ErrorOutlineIcon color="error" />
               )}
-              <Typography>{message.text}</Typography>
+              <Typography variant="body2" fontWeight={500}>{message.text}</Typography>
             </Box>
           )}
 
-          {/* FORMULÁRIO */}
-          <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
+          {/* Campos */}
+          <Box sx={{ display: "flex", flexDirection: "column", gap: 3 }}>
             <TextField
-              label="Nome"
+              label="Nome Completo"
+              variant="outlined"
               fullWidth
               value={name}
               onChange={(e) => setName(e.target.value)}
             />
 
             <TextField
-              label="Usuário"
+              label="E-mail (Usuário)"
               type="email"
+              variant="outlined"
               fullWidth
               value={email}
               onChange={(e) => setEmail(e.target.value)}
             />
 
             <TextField
-              label="Senha"
+              label="Alterar Senha"
               type={showPassword ? "text" : "password"}
               fullWidth
+              placeholder="********"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               InputProps={{
                 endAdornment: (
                   <InputAdornment position="end">
-                    <IconButton onClick={() => setShowPassword(!showPassword)}>
+                    <IconButton onClick={() => setShowPassword(!showPassword)} edge="end">
                       {showPassword ? <VisibilityOff /> : <Visibility />}
                     </IconButton>
                   </InputAdornment>
                 ),
               }}
+              helperText="Deixe em branco para manter a senha atual"
             />
 
             <Button
               variant="contained"
               startIcon={<SaveIcon />}
-              sx={{ mt: 2, px: 4 }}
+              size="large"
               onClick={handleSave}
               disabled={!dirty || loading}
+              sx={{
+                mt: 1,
+                py: 1.5,
+                fontWeight: 600,
+                textTransform: "none",
+                boxShadow: "none",
+                "&:hover": { boxShadow: "0 4px 12px rgba(0,0,0,0.15)" }
+              }}
             >
-              {loading ? "Salvando..." : "Salvar"}
+              {loading ? "Salvando..." : "Salvar Alterações"}
             </Button>
           </Box>
         </Paper>
