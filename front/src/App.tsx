@@ -2,6 +2,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Index from "./pages/index";
 import Login from "./pages/login";
 import LoginCadastrar from "./pages/loginCadastrar";
+import CriarAtividade from "./pages/criarAtividade";
 import "./App.css";
 
 function App() {
@@ -12,6 +13,7 @@ function App() {
           <Route path="/" element={<Index />} />
           <Route path="/login" element={<Login />} />
           <Route path="/cadastro" element={<LoginCadastrar />} />
+          <Route path="/criar" element={<CriarAtividade />} />
         </Routes>
       </BrowserRouter>
     </div>
