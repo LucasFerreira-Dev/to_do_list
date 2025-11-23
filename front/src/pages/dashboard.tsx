@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
-// Importação dos ícones solicitados (MUI)
+// Ícones do Material UI
 import WbSunnyOutlinedIcon from '@mui/icons-material/WbSunnyOutlined';
 import CalendarViewMonthIcon from '@mui/icons-material/CalendarViewMonth';
 import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
 import StarBorderIcon from '@mui/icons-material/StarBorder';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import TrendingUpIcon from '@mui/icons-material/TrendingUp';
-import BarChartIcon from '@mui/icons-material/BarChart';
+// Removi o BarChartIcon daqui para corrigir o erro
 import GroupIcon from '@mui/icons-material/Group';
 import AssignmentTurnedInIcon from '@mui/icons-material/AssignmentTurnedIn';
 import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
@@ -22,7 +22,7 @@ interface DashboardCardProps {
   className?: string;
 }
 
-// Componente Reutilizável para os Cards Pequenos (Topo e Canto Inferior Direito)
+// Componente Reutilizável para os Cards Pequenos
 const StatCard: React.FC<DashboardCardProps> = ({ title, value, subtitle, trend, trendColor, icon, className }) => (
   <div className={`bg-slate-900 text-white p-6 rounded-xl shadow-lg flex flex-col justify-between ${className}`}>
     <div className="flex justify-between items-start">
@@ -40,33 +40,22 @@ const StatCard: React.FC<DashboardCardProps> = ({ title, value, subtitle, trend,
 );
 
 export default function DashboardPage() {
-  // Estado para controlar os filtros (Dia, Mês, Ano)
+  // Estado para controlar os filtros
   const [activeFilter, setActiveFilter] = useState<'dia' | 'mes' | 'ano' | 'pontuacao'>('dia');
 
   return (
     <div className="flex flex-col md:flex-row h-screen w-full bg-gray-100 overflow-hidden">
       
-      {/* ============================================================
-          SIDEBAR (Caixa Azul/Ciano)
-          ============================================================ */}
+      {/* SIDEBAR (Esquerda) */}
       <aside className="w-full md:w-64 bg-cyan-100 flex flex-col justify-between p-4 shadow-xl z-10 relative">
         
-        {/* Topo da Sidebar */}
         <div className="space-y-8">
-          
-          {/* LOGO (Caixa Rosa) */}
-          <div className="w-full h-24 bg-white rounded-xl border-4 border-pink-400 flex items-center justify-center shadow-sm">
-            {/* Substitua este src pela imagem importada do seu projeto */}
-            <img 
-              src="/path-to-your-logo.png" 
-              alt="To Do List Logo" 
-              className="h-16 object-contain" // Ajuste conforme sua imagem
-            /> 
-            {/* Fallback visual se não tiver imagem ainda */}
-            <span className="text-pink-500 font-bold text-xs absolute bottom-2">TO DO LIST</span>
+          {/* LOGO */}
+          <div className="w-full h-24 bg-white rounded-xl border-4 border-pink-400 flex items-center justify-center shadow-sm relative">
+             <span className="text-pink-500 font-bold text-xs">TO DO LIST LOGO</span>
           </div>
 
-          {/* BOTÕES DE FILTRO (Caixas Vermelhas - Topo) */}
+          {/* FILTROS */}
           <nav className="space-y-3">
             <p className="text-cyan-800 font-semibold text-sm uppercase ml-2 mb-2">Filtros</p>
             
@@ -97,7 +86,7 @@ export default function DashboardPage() {
           </nav>
         </div>
 
-        {/* BOTÃO VOLTAR (Caixa Vermelha - Baixo) */}
+        {/* BOTÃO VOLTAR */}
         <div className="mt-auto pt-6">
           <button className="w-full flex items-center justify-center gap-2 bg-orange-500 hover:bg-orange-600 text-white py-3 rounded-xl shadow-md transition-all font-bold">
             <ArrowBackIcon />
@@ -106,16 +95,12 @@ export default function DashboardPage() {
         </div>
       </aside>
 
-
-      {/* ============================================================
-          CONTEÚDO PRINCIPAL (Área dos Dashboards - Verde)
-          ============================================================ */}
+      {/* ÁREA PRINCIPAL (Direita) */}
       <main className="flex-1 overflow-y-auto bg-gray-50 p-4 md:p-8">
         <div className="max-w-7xl mx-auto space-y-6">
           
-          {/* LINHA 1: 3 Cards de Estatísticas (Users, Conversions, Event Count) */}
+          {/* LINHA 1: Cards */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {/* Card 1: Atividades Finalizadas (Users na img) */}
             <StatCard 
               title="Atividades Finalizadas" 
               value="14k" 
@@ -124,8 +109,6 @@ export default function DashboardPage() {
               trendColor="text-green-400"
               icon={<GroupIcon />}
             />
-            
-            {/* Card 2: Atividades que Faltam (Conversions na img) */}
             <StatCard 
               title="Atividades Pendentes" 
               value="325" 
@@ -134,8 +117,6 @@ export default function DashboardPage() {
               trendColor="text-red-400"
               icon={<AssignmentTurnedInIcon />}
             />
-
-            {/* Card 3: Pontuações em XP (Event Count na img) */}
             <StatCard 
               title="Pontuação XP" 
               value="200k" 
@@ -146,72 +127,54 @@ export default function DashboardPage() {
             />
           </div>
 
-
-          {/* LINHA 2: Gráficos Principais */}
+          {/* LINHA 2: Gráficos */}
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            
-            {/* Gráfico de Linha (Esquerda - Ocupa 2 espaços) - XP Infinito */}
+            {/* Gráfico Grande */}
             <div className="lg:col-span-2 bg-slate-900 p-6 rounded-xl shadow-lg min-h-[300px] flex flex-col">
               <h3 className="text-white font-bold mb-1">Evolução de XP</h3>
               <p className="text-gray-400 text-xs mb-4">Conclusões de 0 a XP infinito</p>
-              
-              {/* Placeholder do Gráfico (Onde você colocará o Recharts ou ChartJS) */}
-              <div className="flex-1 flex items-end justify-between gap-2 px-2 pb-2 border-b border-l border-gray-700 relative">
-                 {/* Simulação visual de um gráfico de linhas com CSS puro para o esqueleto */}
-                 <div className="absolute inset-0 flex items-center justify-center text-gray-600">
+              <div className="flex-1 flex items-end justify-center border-b border-l border-gray-700 relative">
+                 <div className="flex items-center text-gray-600">
                     <TrendingUpIcon style={{ fontSize: 60, opacity: 0.2 }} />
-                    <span className="ml-2 text-sm">Área do Gráfico de Linha</span>
+                    <span className="ml-2 text-sm">Gráfico aqui</span>
                  </div>
-                 <div className="w-full h-full bg-gradient-to-t from-blue-900/20 to-transparent rounded"></div>
               </div>
             </div>
 
-            {/* Gráfico de Barras (Direita - Ocupa 1 espaço) - Subtotal Meses */}
+            {/* Gráfico Pequeno */}
             <div className="bg-slate-900 p-6 rounded-xl shadow-lg min-h-[300px] flex flex-col">
               <h3 className="text-white font-bold mb-1">Visão Mensal</h3>
               <p className="text-gray-400 text-xs mb-4">Page views e downloads</p>
-              
-              {/* Placeholder do Gráfico de Barras */}
               <div className="flex-1 flex items-end justify-around gap-2 border-b border-gray-700 pb-2">
                   {[40, 60, 30, 80, 50, 70].map((h, i) => (
-                    <div key={i} className="w-8 bg-blue-500 rounded-t hover:bg-blue-400 transition-all" style={{ height: `${h}%` }}></div>
+                    <div key={i} className="w-8 bg-blue-500 rounded-t" style={{ height: `${h}%` }}></div>
                   ))}
               </div>
             </div>
           </div>
 
-
-          {/* LINHA 3: Tabela e Card de Subtotal */}
+          {/* LINHA 3: Tabela e Saldo */}
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            
-            {/* Tabela (Esquerda - Ocupa 2 espaços) - Histórico */}
             <div className="lg:col-span-2 bg-slate-900 p-6 rounded-xl shadow-lg overflow-hidden">
                <div className="flex justify-between items-center mb-4">
                   <h3 className="text-white font-bold">Histórico de Atividades</h3>
-                  <button className="text-xs text-blue-400 hover:text-blue-300">Ver tudo</button>
                </div>
-               
                <div className="overflow-x-auto">
                  <table className="w-full text-left text-gray-400 text-sm">
                     <thead className="text-xs uppercase text-gray-500 bg-slate-800/50">
                       <tr>
-                        <th className="px-4 py-3 rounded-l-lg">Name</th>
+                        <th className="px-4 py-3">Name</th>
                         <th className="px-4 py-3">Data</th>
                         <th className="px-4 py-3">Status</th>
-                        <th className="px-4 py-3 rounded-r-lg">Dep.</th>
+                        <th className="px-4 py-3">Dep.</th>
                       </tr>
                     </thead>
                     <tbody className="divide-y divide-gray-800">
-                      {/* Linhas Mockadas */}
                       {[1, 2, 3].map((item) => (
-                        <tr key={item} className="hover:bg-slate-800/30 transition-colors">
-                          <td className="px-4 py-3 text-white font-medium">Atividade Exemplo {item}</td>
+                        <tr key={item} className="hover:bg-slate-800/30">
+                          <td className="px-4 py-3 text-white">Atividade {item}</td>
                           <td className="px-4 py-3">15/07/2025</td>
-                          <td className="px-4 py-3">
-                            <span className={`px-2 py-1 rounded text-xs ${item === 2 ? 'bg-red-500/20 text-red-400' : 'bg-green-500/20 text-green-400'}`}>
-                              {item === 2 ? 'Pendente' : 'Concluído'}
-                            </span>
-                          </td>
+                          <td className="px-4 py-3">Concluído</td>
                           <td className="px-4 py-3">Dev</td>
                         </tr>
                       ))}
@@ -220,20 +183,14 @@ export default function DashboardPage() {
                </div>
             </div>
 
-            {/* Card Pequeno (Direita - Ocupa 1 espaço) - Subtotal/Saldo */}
             <div className="bg-slate-900 p-6 rounded-xl shadow-lg flex flex-col justify-center">
                 <div className="w-12 h-12 bg-slate-800 rounded-lg flex items-center justify-center mb-4">
                    <AttachMoneyIcon className="text-blue-400" />
                 </div>
-                <h3 className="text-gray-400 text-sm">Saldo Total (Sub-total)</h3>
+                <h3 className="text-gray-400 text-sm">Saldo Total</h3>
                 <p className="text-4xl font-bold text-white mt-2">$3,024.00</p>
-                <p className="text-gray-500 text-xs mt-1">Sem filtro de data</p>
-                
-                <button className="mt-6 w-full py-2 border border-slate-700 text-blue-400 rounded-lg hover:bg-slate-800 transition-all text-sm font-semibold">
-                  Ver Detalhes
-                </button>
+                <button className="mt-6 w-full py-2 border border-slate-700 text-blue-400 rounded-lg">Ver Detalhes</button>
             </div>
-
           </div>
           
         </div>
@@ -242,17 +199,11 @@ export default function DashboardPage() {
   );
 }
 
-// Componente Auxiliar para os Botões da Sidebar
+// Botão Auxiliar
 const FilterButton = ({ label, icon, isActive, onClick }: { label: string, icon: React.ReactNode, isActive: boolean, onClick: () => void }) => (
   <button 
     onClick={onClick}
-    className={`
-      w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 font-medium text-sm
-      ${isActive 
-        ? 'bg-orange-500 text-white shadow-md translate-x-1' // Estado Ativo (Vermelho/Laranja da img)
-        : 'bg-white/50 text-gray-600 hover:bg-white hover:shadow-sm' // Estado Inativo
-      }
-    `}
+    className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 font-medium text-sm ${isActive ? 'bg-orange-500 text-white shadow-md translate-x-1' : 'bg-white/50 text-gray-600 hover:bg-white'}`}
   >
     {icon}
     <span>{label}</span>
