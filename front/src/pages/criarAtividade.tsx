@@ -190,11 +190,11 @@ const CriarAtividade: React.FC = () => {
                 titulo,
                 descricao,
                 status: "pendente",
-                concluidoEm: "" // ajuste conforme sua API (null / "" / data)
+                concluidoEm: null // ajuste conforme sua API (null / "" / data)
             };
 
             // troque a URL abaixo pela sua rota real
-            await axios.post("http://localhost:8080/api/atividades", payload);
+            await axios.post("http://back:3333/tarefas", payload);
 
             // sucesso
             setAlertaTipo("success");
