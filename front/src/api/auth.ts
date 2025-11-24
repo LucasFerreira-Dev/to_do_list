@@ -1,7 +1,7 @@
 // api/auth.ts
 import axios from 'axios';
 
-const API_URL = 'http://localhost:3001/api';
+const API_URL = 'http://localhost:5433/api';
 
 export const authAPI = {
     login: async (email: string, password: string) => {
