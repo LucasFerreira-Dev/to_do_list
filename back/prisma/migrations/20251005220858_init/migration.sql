@@ -14,7 +14,7 @@ CREATE TABLE "Tarefa" (
     "titulo" TEXT NOT NULL,
     "descricao" TEXT,
     "status" TEXT NOT NULL DEFAULT 'pendente',
-    "criadoEm" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "criadoEm" TIMESTAMP(3) DEFAULT CURRENT_TIMESTAMP,
     "concluidoEm" TIMESTAMP(3),
 
     CONSTRAINT "Tarefa_pkey" PRIMARY KEY ("id")
