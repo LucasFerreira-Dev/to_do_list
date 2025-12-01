@@ -4,7 +4,8 @@ import {
     IconButton, 
     Tooltip,
 } from "@mui/material";
-import AssignmentReturnIcon from '@mui/icons-material/AssignmentReturn';
+import EditDocumentIcon from '@mui/icons-material/EditDocument';
+import { pink } from "@mui/material/colors";
 
 const actionBtnStyle = {
     border: '2px solid #e0e0e0', 
@@ -13,34 +14,34 @@ const actionBtnStyle = {
     boxShadow: '0px 4px 8px rgba(0,0,0,0.2)',
     '&:hover': { 
         bgcolor: '#e3f2fd', 
-        borderColor: '#2196f3', 
+        borderColor: "#f0e000ff", 
         transform: 'translateY(-2px)',
         boxShadow: '0px 6px 12px rgba(0,0,0,0.3)',
     },
     // ⭐ aqui muda a cor do ícone no hover
     '&:hover svg': {
-        color: '#2196f3'
+        color: "#f0e000ff"
     }
 };
+
 
 interface VoltarProps {
     onClick?: () => void;
     title?: string;
-}
+}  
 
-const Voltar: React.FC<VoltarProps> = ({ onClick, title = "Voltar" }) => {
-    return (
+const Editar: React.FC<VoltarProps> = ({ onClick, title = "Editar" }) => {
+    return(
         <Box>
             <Tooltip title={title}>
                 <IconButton 
                     onClick={onClick}
-                    sx={{ ...actionBtnStyle, borderColor: '#B3D4F5', marginRight: 1 }}
-                >
-                    <AssignmentReturnIcon sx={{ fontSize: 50, color: "#B3D4F5" }} />
+                    sx={{ ...actionBtnStyle, borderColor: "#B3D4F5", marginRight: 1 }}>
+                    <EditDocumentIcon sx={{ fontSize: 50, color: "#B3D4F5" }} />
                 </IconButton>
             </Tooltip>
         </Box>
-    );
+    )
 };
 
-export default Voltar;
+export default Editar;

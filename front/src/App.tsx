@@ -3,7 +3,12 @@ import Index from "./pages/index";
 import Login from "./pages/login";
 import LoginCadastrar from "./pages/loginCadastrar";
 import CriarAtividade from "./pages/criarAtividade";
+import TodoListPage from "./pages/tarefas";
+import Config from "./pages/config";
 import "./App.css";
+
+//Ambiente de testes
+import Testes from "./pages/testes";
 
 function App() {
   return (
@@ -14,6 +19,11 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/cadastro" element={<LoginCadastrar />} />
           <Route path="/criar" element={<CriarAtividade />} />
+          <Route path="/tarefa" element={<TodoListPage />} />
+          <Route path="/editar" element={<Config/>} />
+
+          {/*Ambiente de testes */}
+          <Route path="/teste" element={<Testes />} />
         </Routes>
       </BrowserRouter>
     </div>
