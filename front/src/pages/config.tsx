@@ -18,6 +18,8 @@ import SaveIcon from "@mui/icons-material/Save";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import ErrorOutlineIcon from "@mui/icons-material/ErrorOutline";
 import DashboardIcon from "@mui/icons-material/Dashboard"; // Added fallback icon
+import logoImg from "../assets/logo.png";
+
 
 type Message = { type: "success" | "error" | "info"; text: string } | null;
 
@@ -156,10 +158,9 @@ const Config: React.FC<ConfigProps> = ({ logoPath }) => {
       >
         {/* Logo */}
         <Box sx={{ display: "flex", alignItems: "center", gap: 2, mb: 4, px: 1 }}>
-          {logoPath ? (
             <Box
               component="img"
-              src={logoPath}
+              src={logoPath ? logoPath : logoImg}
               sx={{
                 width: 40,
                 height: 40,
@@ -167,9 +168,9 @@ const Config: React.FC<ConfigProps> = ({ logoPath }) => {
                 minWidth: 40, // Garante que a logo não suma
               }}
             />
-          ) : (
+           : 
             <DashboardIcon sx={{ fontSize: 40, color: "#003366", minWidth: 40 }} />
-          )}
+          
         </Box>
 
         {/* Botão Configurações */}

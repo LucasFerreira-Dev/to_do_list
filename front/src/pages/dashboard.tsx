@@ -10,6 +10,7 @@ import TrendingUpIcon from '@mui/icons-material/TrendingUp';
 import GroupIcon from '@mui/icons-material/Group';
 import AssignmentTurnedInIcon from '@mui/icons-material/AssignmentTurnedIn';
 import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
+import logoImg from "../assets/logo.png"; 
 
 // Interface para as props dos Cards
 interface DashboardCardProps {
@@ -51,8 +52,12 @@ export default function DashboardPage() {
         
         <div className="space-y-8">
           {/* LOGO */}
-          <div className="w-full h-24 bg-white rounded-xl border-4 border-pink-400 flex items-center justify-center shadow-sm relative">
-             <span className="text-pink-500 font-bold text-xs">TO DO LIST LOGO</span>
+          <div className="w-full h-24 bg-white rounded-xl border-4 border-pink-400 flex items-center justify-center shadow-sm relative p-2 overflow-hidden">
+             <img 
+               src={logoImg} 
+               alt="Logo" 
+               className="w-full h-full object-contain" 
+             />
           </div>
 
           {/* FILTROS */}
