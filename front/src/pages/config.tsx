@@ -17,9 +17,7 @@ import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import SaveIcon from "@mui/icons-material/Save";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import ErrorOutlineIcon from "@mui/icons-material/ErrorOutline";
-import DashboardIcon from "@mui/icons-material/Dashboard"; // Added fallback icon
-import logoImg from "../assets/logo.png";
-
+import logoImg from "../assets/logo.png"; 
 
 type Message = { type: "success" | "error" | "info"; text: string } | null;
 
@@ -27,12 +25,11 @@ type ConfigProps = {
   logoPath?: string;
 };
 
-const COLLAPSED = 70; // Largura fechada
-const EXPANDED = 240; // Largura aberta
+const COLLAPSED = 70; 
+const EXPANDED = 240; 
 
 const Config: React.FC<ConfigProps> = ({ logoPath }) => {
   const theme = useTheme();
-  // mdUp define se estamos em tela média/grande (Desktop/Tablet)
   const mdUp = useMediaQuery(theme.breakpoints.up("md"));
 
   const [name, setName] = useState<string>("");
@@ -54,8 +51,6 @@ const Config: React.FC<ConfigProps> = ({ logoPath }) => {
     let mounted = true;
     (async () => {
       try {
-        // Simulação de dados. Substitua pelo seu fetch real:
-        // const res = await fetch("/api/user");
         const data = { name: "Admin User", email: "admin@exemplo.com" }; 
         
         if (!mounted) return;
@@ -110,31 +105,25 @@ const Config: React.FC<ConfigProps> = ({ logoPath }) => {
       initialRef.current = { name, email, password: "" };
       setPassword("");
     } catch {
-      // Mock de erro/sucesso para visualização
       setMessage({ type: "success", text: "Salvo com sucesso! (Simulação)" });
     } finally {
       setLoading(false);
     }
   };
 
-  // Lógica da Sidebar:
-  // No desktop (mdUp), ela obedece o mouse (isOpen). 
-  // No mobile (!mdUp), ela fica fixa como 'colapsada' ou você pode criar uma lógica de Drawer.
   const sidebarWidth = mdUp && isOpen ? EXPANDED : COLLAPSED;
 
   return (
     <Box
       sx={{
-        display: "flex",       // Define o layout lado a lado
-        height: "100vh",       // Altura total da tela
+        display: "flex",       
+        height: "100vh",       
         width: "100vw",
-        overflow: "hidden",    // Impede scroll na página inteira (scroll interno apenas)
+        overflow: "hidden",    
         bgcolor: "#f4f5f6",
       }}
     >
-      {/* =================== SIDEBAR (Preto no diagrama) =================== 
-        Mudamos de position: 'fixed' para relativo ao flex container.
-      */}
+      {/* =================== SIDEBAR =================== */}
       <Box
         component="aside"
         onMouseEnter={() => mdUp && setIsOpen(true)}
@@ -142,8 +131,8 @@ const Config: React.FC<ConfigProps> = ({ logoPath }) => {
         sx={{
           width: sidebarWidth,
           height: "100%",
-          bgcolor: "#cfe9ff", // Cor da sidebar
-          transition: "width 0.3s ease", // Animação suave de empurrar
+          bgcolor: "#cfe9ff", 
+          transition: "width 0.3s ease",
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
@@ -151,53 +140,55 @@ const Config: React.FC<ConfigProps> = ({ logoPath }) => {
           px: 1,
           boxShadow: "2px 0 8px rgba(0,0,0,0.1)",
           zIndex: 20,
-          flexShrink: 0, // Garante que a sidebar nunca seja esmagada
-          overflowX: "hidden", // Esconde o texto quando colapsada
-          whiteSpace: "nowrap", // Impede quebra de linha do texto
+          flexShrink: 0,
+          overflowX: "hidden", 
+          whiteSpace: "nowrap",
         }}
       >
-        {/* Logo */}
+        {/* 1. LOGO */}
         <Box sx={{ display: "flex", alignItems: "center", gap: 2, mb: 4, px: 1 }}>
             <Box
               component="img"
               src={logoPath ? logoPath : logoImg}
               sx={{
-                width: 40,
-                height: 40,
+                width: 80,
+                height: 80,
                 objectFit: "contain",
-                minWidth: 40, // Garante que a logo não suma
+                minWidth: 80, 
               }}
             />
-           : 
-            <DashboardIcon sx={{ fontSize: 40, color: "#003366", minWidth: 40 }} />
-          
         </Box>
 
-        {/* Botão Configurações */}
+        {/* 2. Botão Configurações (Fica no topo) */}
         <Box sx={{ width: "100%", px: 1 }}>
           <Button
             onClick={() => setActiveSidebar("settings")}
             startIcon={<SettingsIcon />}
             sx={{
               width: "100%",
-              justifyContent: isOpen ? "flex-start" : "center", // Centraliza ícone se fechado
+              justifyContent: isOpen ? "flex-start" : "center",
               bgcolor: activeSidebar === "settings" ? "#9fd6ff" : "transparent",
               "&:hover": { bgcolor: "#9fd6ff" },
               color: "#003366",
               mb: 1,
-              minWidth: 0, // Fix para flexbox do botão
-              px: isOpen ? 2 : 0, // Remove padding lateral se fechado para centralizar icone
-              '& .MuiButton-startIcon': { mr: isOpen ? 1 : 0 } // Remove margem do icone se fechado
+              minWidth: 0,
+              px: isOpen ? 2 : 0, 
+              '& .MuiButton-startIcon': { mr: isOpen ? 1 : 0 }
             }}
           >
             {isOpen && "Configurações"}
           </Button>
         </Box>
 
+        {/* 3. ESPAÇADOR: Empurra tudo o que vem depois para baixo */}
         <Box sx={{ flexGrow: 1 }} />
 
-        {/* Botão Voltar */}
-        <Box sx={{ width: "100%", mb: 2, px: 1 }}>
+        {/* 4. BOTÃO VOLTAR:
+            Usei mb: 20 (aprox 160px). Isso faz ele desgrudar do chão.
+            Se quiser mais alto, aumente para 25 ou 30.
+            Se quiser mais baixo, diminua para 10 ou 15.
+        */}
+        <Box sx={{ width: "100%", mb: 5, px: 1 }}>
           <Button
             onClick={() => {
                 setActiveSidebar("back");
@@ -220,32 +211,26 @@ const Config: React.FC<ConfigProps> = ({ logoPath }) => {
         </Box>
       </Box>
 
-      {/* =================== CONTEÚDO (Verde no diagrama) =================== 
-        flexGrow: 1 faz ele ocupar todo o espaço que sobra.
-        Como a sidebar muda de tamanho, este container se ajusta automaticamente.
-      */}
+      {/* =================== CONTEÚDO PRINCIPAL =================== */}
       <Box
         component="main"
         sx={{
           flexGrow: 1, 
           height: "100%",
-          overflowY: "auto", // Scroll apenas aqui dentro se necessário
+          overflowY: "auto", 
           position: "relative",
-          display: "flex",           // Flex para centralizar o Paper
-          justifyContent: "center",  // Centraliza horizontalmente
-          alignItems: "center",      // Centraliza verticalmente
+          display: "flex",          
+          justifyContent: "center",  
+          alignItems: "center",      
           p: 3,
-          transition: "all 0.3s ease", // Suaviza caso haja mudanças de cor ou margem
+          transition: "all 0.3s ease", 
         }}
       >
-        {/* =================== EDITAR (Vermelho no diagrama) =================== 
-            Fica centralizado dentro da área verde
-        */}
         <Paper
           elevation={3}
           sx={{
             width: "100%",
-            maxWidth: "500px", // Limite de largura para ficar elegante
+            maxWidth: "500px",
             p: { xs: 3, md: 5 },
             borderRadius: 3,
             bgcolor: "#fff",
@@ -259,7 +244,6 @@ const Config: React.FC<ConfigProps> = ({ logoPath }) => {
             Editar informações
           </Typography>
 
-          {/* Mensagens de Feedback */}
           {message && (
             <Box
               sx={{
@@ -285,7 +269,6 @@ const Config: React.FC<ConfigProps> = ({ logoPath }) => {
             </Box>
           )}
 
-          {/* Campos */}
           <Box sx={{ display: "flex", flexDirection: "column", gap: 3 }}>
             <TextField
               label="Nome Completo"
@@ -348,5 +331,3 @@ const Config: React.FC<ConfigProps> = ({ logoPath }) => {
 };
 
 export default Config;
-
-
