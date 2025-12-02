@@ -5,6 +5,7 @@ import LoginCadastrar from "./pages/loginCadastrar";
 import CriarAtividade from "./pages/criarAtividade";
 import "./App.css";
 import Config from "./pages/config";
+import Tarefas from "./pages/tarefas";
 
 function App() {
   return (
@@ -16,6 +17,7 @@ function App() {
           <Route path="/cadastro" element={<LoginCadastrar />} />
           <Route path="/criar" element={<CriarAtividade />} />
           <Route path="/config" element={<Config />} />
+          <Route path="/tarefas" element={<Tarefas />} />
         </Routes>
       </BrowserRouter>
     </div>

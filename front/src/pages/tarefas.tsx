@@ -81,7 +81,6 @@ export default function TodoListPage() {
   const [tasks, setTasks] = useState<Task[]>([]); 
   const [tempInput, setTempInput] = useState("");
 
-  // --- Estado da Notificação ---
   const [notification, setNotification] = useState<{ open: boolean; message: string; severity: AlertColor }>({
     open: false,
     message: '',
@@ -97,16 +96,13 @@ export default function TodoListPage() {
     setNotification({ ...notification, open: false });
   };
 
-  // --- Navegação ---
   const handleGoToStats = () => showNotification("Navegando para Estatísticas...", "info");
   const handleGoToNewPage = () => showNotification("Abrindo página de Nova Tarefa...", "info");
 
-  // --- Interação ---
   const toggleSelectTask = (id: number) => {
     setTasks(tasks.map(t => t.id === id ? { ...t, selected: !t.selected } : t));
   };
 
-  // --- Ações ---
   const handleCompleteSelected = () => {
     const hasSelection = tasks.some(t => t.selected);
     if (!hasSelection) {
@@ -143,31 +139,29 @@ export default function TodoListPage() {
   };
 
   return (
-    <Container maxWidth="md" sx={{ py: 4, minHeight: '100vh', bgcolor: 'white' }}>
+    <Box sx={{ minHeight: '100vh', bgcolor: 'white' }}>
       
-      <Box sx={{ display: 'flex', flexDirection: { xs: 'column', md: 'row' }, justifyContent: 'space-between', mb: 4, borderBottom: '1px solid #eee', pb: 4 }}>
+      {/* --- CABEÇALHO FIXO --- */}
+      <Paper 
+        elevation={0} 
+        sx={{ 
+          position: 'fixed', top: 0, left: 0, right: 0, height: '80px', zIndex: 1100,
+          bgcolor: 'white', borderBottom: '1px solid #eee', px: 4, 
+          display: 'flex', justifyContent: 'space-between', alignItems: 'center'
+        }}
+      >
         <Stack direction="row" spacing={2} alignItems="center">
           <Avatar sx={{ width: 56, height: 56, bgcolor: 'transparent', border: '2px solid black', color: 'black' }}>
             <PersonIcon sx={{ fontSize: 32 }} />
           </Avatar>
           <Box>
             <Box sx={{ bgcolor: '#bbdefb', px: 1, borderRadius: 1, width: 'fit-content' }}>
-              <Box 
-               component="img"
-               src={logoImg}  // A variável que importamos lá em cima
-               alt="Logo To Do List"
-               sx={{ 
-                 height: 60,      
-                 width: 'auto',  
-                 mb: 0.5,         
-                 borderRadius: 1  
-               }}
-            />
+              <Box component="img" src={logoImg} alt="Logo" sx={{ height: 60, width: 'auto', mb: 0.5, borderRadius: 1 }} />
             </Box>
           </Box>
         </Stack>
 
-        <Stack direction="row" spacing={2} mt={{ xs: 2, md: 0 }}>
+        <Stack direction="row" spacing={2}>
           <Tooltip title="Dashboard">
             <IconButton onClick={handleGoToStats} sx={actionBtnStyle}>
               <BarChartIcon color="primary" fontSize="large" />
@@ -189,29 +183,57 @@ export default function TodoListPage() {
             </IconButton>
           </Tooltip>
         </Stack>
-      </Box>
+      </Paper>
 
-      <Box sx={{ minHeight: 200 }}>
-        {tasks.length === 0 ? (
-          <Typography align="center" color="text.secondary" sx={{ mt: 8, fontStyle: 'italic' }}>
-            Nenhuma tarefa visível... <br/> 
-            (Adicione abaixo para ver o molde aparecer)
+      {/* --- CONTEÚDO PRINCIPAL (MUDANÇA AQUI) --- */}
+      {/* Alterei maxWidth="md" para "lg" (large) */}
+      <Container maxWidth="lg" sx={{ mt: 14, pb: 20 }}>
+        <Box sx={{ minHeight: 200 }}>
+          {tasks.length === 0 ? (
+            <Typography align="center" color="text.secondary" sx={{ fontStyle: 'italic' }}>
+              Nenhuma tarefa visível... <br/> 
+              (Adicione abaixo para ver o molde aparecer)
+            </Typography>
+          ) : (
+            tasks.map(task => (
+              <TaskItem key={task.id} task={task} onToggleSelect={() => toggleSelectTask(task.id)} />
+            ))
+          )}
+        </Box>
+      </Container>
+
+      {/* --- RODAPÉ FIXO (MUDANÇA AQUI TAMBÉM) --- */}
+      <Paper 
+        elevation={10} 
+        sx={{ 
+          position: 'fixed', bottom: 0, left: 0, right: 0, zIndex: 1000,
+          bgcolor: 'white', borderTop: '1px solid #e0e0e0', py: 2
+        }}
+      >
+        {/* Container do Rodapé também deve ser "lg" para alinhar com as tarefas */}
+        <Container maxWidth="lg">
+          <Typography variant="caption" color="gray" sx={{ ml: 1 }}>
+            Adicionar nova tarefa
           </Typography>
-        ) : (
-          tasks.map(task => (
-            <TaskItem key={task.id} task={task} onToggleSelect={() => toggleSelectTask(task.id)} />
-          ))
-        )}
-      </Box>
-
-        {/* --- Área de Teste Dev --- REMOVER QUANDO PRONTO --- */}
-      <Box sx={{ mt: 8, pt: 4, borderTop: '1px dashed #ccc' }}>
-        <Typography variant="caption" color="gray">Área de Teste</Typography>
-        <Stack direction="row" spacing={2} mt={1}>
-          <TextField size="small" placeholder="Digite para testar..." value={tempInput} onChange={(e) => setTempInput(e.target.value)} fullWidth />
-          <Button variant="contained" onClick={devAddNewTask}>CRIAR</Button>
-        </Stack>
-      </Box>
+          <Stack direction="row" spacing={2} mt={0.5}>
+            <TextField 
+              size="small" 
+              placeholder="Digite para testar..." 
+              value={tempInput} 
+              onChange={(e) => setTempInput(e.target.value)} 
+              fullWidth 
+              onKeyPress={(e) => { if (e.key === 'Enter') devAddNewTask(); }}
+            />
+            <Button 
+              variant="contained" 
+              onClick={devAddNewTask}
+              sx={{ minWidth: 100, fontWeight: 'bold' }}
+            >
+              CRIAR
+            </Button>
+          </Stack>
+        </Container>
+      </Paper>
 
       <Snackbar 
         open={notification.open} 
@@ -219,16 +241,11 @@ export default function TodoListPage() {
         onClose={handleCloseNotification}
         anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
       >
-        <Alert 
-          onClose={handleCloseNotification} 
-          severity={notification.severity} 
-          sx={{ width: '100%', boxShadow: 3 }}
-          variant="filled"
-        >
+        <Alert onClose={handleCloseNotification} severity={notification.severity} sx={{ width: '100%', boxShadow: 3 }} variant="filled">
           {notification.message}
         </Alert>
       </Snackbar>
 
-    </Container>
+    </Box>
   );
 }
