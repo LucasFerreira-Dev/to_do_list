@@ -9,6 +9,8 @@ import "./App.css";
 
 //Ambiente de testes
 import Testes from "./pages/testes";
+import ConcluirAtividade from "./pages/concluirAtividade";
+import VerAtidade from "./pages/verAtividade";
 
 function App() {
   return (
@@ -20,7 +22,9 @@ function App() {
           <Route path="/cadastro" element={<LoginCadastrar />} />
           <Route path="/criar" element={<CriarAtividade />} />
           <Route path="/tarefa" element={<TodoListPage />} />
-          <Route path="/editar" element={<Config/>} />
+          <Route path="/config" element={<Config/>} />
+          <Route path="/editar" element={<ConcluirAtividade />} />
+          <Route path="/tarefa/:id" element={<VerAtidade />} />
 
           {/*Ambiente de testes */}
           <Route path="/teste" element={<Testes />} />
