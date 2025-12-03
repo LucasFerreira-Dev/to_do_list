@@ -6,6 +6,8 @@ import CriarAtividade from "./pages/criarAtividade";
 import TodoListPage from "./pages/tarefas";
 import Config from "./pages/config";
 import "./App.css";
+import DashboardCardProps from "./pages/dashboard";
+
 
 //Ambiente de testes
 import Testes from "./pages/testes";
@@ -25,6 +27,7 @@ function App() {
           <Route path="/config" element={<Config/>} />
           <Route path="/editar" element={<ConcluirAtividade />} />
           <Route path="/tarefa/:id" element={<VerAtidade />} />
+          <Route path="/dashboard" element={<DashboardCardProps />} />
 
           {/*Ambiente de testes */}
           <Route path="/teste" element={<Testes />} />

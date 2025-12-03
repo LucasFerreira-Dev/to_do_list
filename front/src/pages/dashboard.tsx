@@ -1,4 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+// Import da Logo
+import logoImg from "../assets/logo.png"; 
+
 // Ícones do Material UI
 import WbSunnyOutlinedIcon from '@mui/icons-material/WbSunnyOutlined';
 import CalendarViewMonthIcon from '@mui/icons-material/CalendarViewMonth';
@@ -6,7 +9,6 @@ import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
 import StarBorderIcon from '@mui/icons-material/StarBorder';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import TrendingUpIcon from '@mui/icons-material/TrendingUp';
-// Removi o BarChartIcon daqui para corrigir o erro
 import GroupIcon from '@mui/icons-material/Group';
 import AssignmentTurnedInIcon from '@mui/icons-material/AssignmentTurnedIn';
 import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
@@ -40,8 +42,65 @@ const StatCard: React.FC<DashboardCardProps> = ({ title, value, subtitle, trend,
 );
 
 export default function DashboardPage() {
-  // Estado para controlar os filtros
   const [activeFilter, setActiveFilter] = useState<'dia' | 'mes' | 'ano' | 'pontuacao'>('dia');
+  
+  // Estado Inicial ZERADO (Para indicar que não há conexão com o banco ainda)
+  const [stats, setStats] = useState({
+    finalizadas: "0",
+    pendentes: "0",
+    xp: "0"
+  });
+
+  // --- LÓGICA DOS FILTROS E CONEXÃO ---
+  // Este useEffect roda toda vez que 'activeFilter' muda (quando você clica no botão)
+  useEffect(() => {
+    console.log("Filtro alterado para:", activeFilter);
+
+    // 1. SIMULAÇÃO LOCAL (COMENTADA PARA MANTER ZERADO)
+    // Descomente este bloco se quiser ver valores fictícios mudando para teste.
+    /*
+    switch(activeFilter) {
+      case 'dia':
+        setStats({ finalizadas: "14k", pendentes: "325", xp: "200k" });
+        break;
+      case 'mes':
+        setStats({ finalizadas: "450k", pendentes: "1.2k", xp: "5M" }); 
+        break;
+      case 'ano':
+        setStats({ finalizadas: "5.2M", pendentes: "15k", xp: "60M" }); 
+        break;
+      case 'pontuacao':
+        setStats({ finalizadas: "Rank #1", pendentes: "0", xp: "TOP 1" });
+        break;
+    }
+    */
+
+    // 2. CONEXÃO REAL COM O BANCO (COMENTADO)
+    // Quando tiver o backend, use este código:
+    /*
+    async function fetchData() {
+       try {
+         // Passamos o filtro na URL. Ex: api.com/stats?periodo=mes
+         const response = await fetch(`http://sua-api.com/dashboard-stats?periodo=${activeFilter}`);
+         
+         if (!response.ok) throw new Error('Falha ao buscar');
+
+         const data = await response.json();
+         
+         // Atualiza a tela com os dados reais do banco
+         setStats({
+            finalizadas: data.totalCompleted, 
+            pendentes: data.totalPending,     
+            xp: data.totalXp                  
+         });
+       } catch (error) {
+         console.error("Erro na conexão:", error);
+       }
+    }
+    fetchData();
+    */
+    
+  }, [activeFilter]); // <-- O segredo: esse array diz "Rode de novo se activeFilter mudar"
 
   return (
     <div className="flex flex-col md:flex-row h-screen w-full bg-gray-100 overflow-hidden">
@@ -50,39 +109,23 @@ export default function DashboardPage() {
       <aside className="w-full md:w-64 bg-cyan-100 flex flex-col justify-between p-4 shadow-xl z-10 relative">
         
         <div className="space-y-8">
-          {/* LOGO */}
-          <div className="w-full h-24 bg-white rounded-xl border-4 border-pink-400 flex items-center justify-center shadow-sm relative">
-             <span className="text-pink-500 font-bold text-xs">TO DO LIST LOGO</span>
+          {/* LOGO (Atualizada - Maior e sem borda) */}
+          <div className="w-full h-32 bg-white rounded-xl flex items-center justify-center shadow-sm relative overflow-hidden p-2">
+             <img 
+               src={logoImg} 
+               alt="Logo To Do List" 
+               className="h-full w-auto object-contain"
+             />
           </div>
 
           {/* FILTROS */}
           <nav className="space-y-3">
             <p className="text-cyan-800 font-semibold text-sm uppercase ml-2 mb-2">Filtros</p>
             
-            <FilterButton 
-              label="Dia" 
-              icon={<WbSunnyOutlinedIcon />} 
-              isActive={activeFilter === 'dia'} 
-              onClick={() => setActiveFilter('dia')}
-            />
-            <FilterButton 
-              label="Mês" 
-              icon={<CalendarViewMonthIcon />} 
-              isActive={activeFilter === 'mes'} 
-              onClick={() => setActiveFilter('mes')}
-            />
-            <FilterButton 
-              label="Ano" 
-              icon={<CalendarTodayIcon />} 
-              isActive={activeFilter === 'ano'} 
-              onClick={() => setActiveFilter('ano')}
-            />
-            <FilterButton 
-              label="Pontuação" 
-              icon={<StarBorderIcon />} 
-              isActive={activeFilter === 'pontuacao'} 
-              onClick={() => setActiveFilter('pontuacao')}
-            />
+            <FilterButton label="Dia" icon={<WbSunnyOutlinedIcon />} isActive={activeFilter === 'dia'} onClick={() => setActiveFilter('dia')} />
+            <FilterButton label="Mês" icon={<CalendarViewMonthIcon />} isActive={activeFilter === 'mes'} onClick={() => setActiveFilter('mes')} />
+            <FilterButton label="Ano" icon={<CalendarTodayIcon />} isActive={activeFilter === 'ano'} onClick={() => setActiveFilter('ano')} />
+            <FilterButton label="Pontuação" icon={<StarBorderIcon />} isActive={activeFilter === 'pontuacao'} onClick={() => setActiveFilter('pontuacao')} />
           </nav>
         </div>
 
@@ -99,28 +142,28 @@ export default function DashboardPage() {
       <main className="flex-1 overflow-y-auto bg-gray-50 p-4 md:p-8">
         <div className="max-w-7xl mx-auto space-y-6">
           
-          {/* LINHA 1: Cards */}
+          {/* LINHA 1: Cards (Dinâmicos) */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             <StatCard 
               title="Atividades Finalizadas" 
-              value="14k" 
-              subtitle="Últimos 30 dias" 
+              value={stats.finalizadas} 
+              subtitle={`Filtro: ${activeFilter}`} // Mostra qual filtro está ativo
               trend="+25%" 
               trendColor="text-green-400"
               icon={<GroupIcon />}
             />
             <StatCard 
               title="Atividades Pendentes" 
-              value="325" 
-              subtitle="Últimos 30 dias" 
+              value={stats.pendentes} 
+              subtitle={`Filtro: ${activeFilter}`}
               trend="-25%" 
               trendColor="text-red-400"
               icon={<AssignmentTurnedInIcon />}
             />
             <StatCard 
               title="Pontuação XP" 
-              value="200k" 
-              subtitle="Últimos 30 dias" 
+              value={stats.xp} 
+              subtitle={`Filtro: ${activeFilter}`} 
               trend="+5%" 
               trendColor="text-green-400"
               icon={<StarBorderIcon />}
@@ -136,7 +179,7 @@ export default function DashboardPage() {
               <div className="flex-1 flex items-end justify-center border-b border-l border-gray-700 relative">
                  <div className="flex items-center text-gray-600">
                     <TrendingUpIcon style={{ fontSize: 60, opacity: 0.2 }} />
-                    <span className="ml-2 text-sm">Gráfico aqui</span>
+                    <span className="ml-2 text-sm">Gráfico Carregando...</span>
                  </div>
               </div>
             </div>

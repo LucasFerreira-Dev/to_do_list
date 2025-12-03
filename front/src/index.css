@@ -1,4 +1,7 @@
 /* index.css: conteúdo removido. O arquivo foi mantido no repositório por segurança,
    mas não está mais importado pelo projeto. Se desejar, pode apagar este arquivo
    manualmente. */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
