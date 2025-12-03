@@ -164,7 +164,7 @@ const AvatarIcone: React.FC<AvatarIconeProps> = ({ onSair, onConfig }) => {
                     <Box //botoes
                         sx={{
                             display: "flex",
-                            margin: 3,
+                            margin: 1,
                         }}
                     >
                         <Button fullWidth variant="contained" onClick={onSair} sx={{ backgroundColor: "#4B5B9C", mb: 1, width: "8vw", height: "4vw" , marginRight: 1}}>

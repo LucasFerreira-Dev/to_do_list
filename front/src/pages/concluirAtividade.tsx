@@ -38,7 +38,7 @@ const Nav: React.FC<NavProps> = ({ onConcluir }) => {
                     
                 }}
             >
-                <AvatarIcone onSair={() => navigate("/inicio")} onConfig={() => navigate("/configuracoes")} />
+                <AvatarIcone onSair={() => navigate("/")} onConfig={() => navigate("/config")} />
                 <Logo />
             </Box>
             <Box //fim
@@ -48,7 +48,7 @@ const Nav: React.FC<NavProps> = ({ onConcluir }) => {
                 }}
             >
                 <Concluir onClick={onConcluir} title="Concluir atividade" />
-                <Voltar onClick={() => navigate("/atividades")} title="Voltar para Atividades" />
+                <Voltar onClick={() => navigate("/tarefa")} title="Voltar para Atividades" />
             </Box>
         </Box>
     )
