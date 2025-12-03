@@ -188,7 +188,7 @@ const Config: React.FC<ConfigProps> = ({ logoPath }) => {
             Se quiser mais alto, aumente para 25 ou 30.
             Se quiser mais baixo, diminua para 10 ou 15.
         */}
-        <Box sx={{ width: "100%", mb: 5, px: 1 }}>
+        <Box sx={{ width: "100%", px: 1 }}>
           <Button
             onClick={() => {
                 setActiveSidebar("back");
