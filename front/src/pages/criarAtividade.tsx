@@ -39,7 +39,7 @@ const Nav: React.FC<NavProps> = ({ onConcluir }) => {
                     
                 }}
             >
-                <AvatarIcone onSair={() => navigate("/inicio")} onConfig={() => navigate("/configuracoes")} />
+                <AvatarIcone onSair={() => navigate("/")} onConfig={() => navigate("/config")} />
                 <Logo />
             </Box>
             <Box //fim
@@ -49,7 +49,7 @@ const Nav: React.FC<NavProps> = ({ onConcluir }) => {
                 }}
             >
                 <Concluir onClick={onConcluir} title="Criar atividade" />
-                <Voltar onClick={() => navigate("/atividades")} title="Voltar para Atividades" />
+                <Voltar onClick={() => navigate("/tarefa")} title="Voltar para Atividades" />
             </Box>
         </Box>
     )
@@ -203,8 +203,8 @@ const CriarAtividade: React.FC = () => {
 
             // aguarda 3s e redireciona
             setTimeout(() => {
-            navigate("/atividades");
-            }, 3000);
+                navigate("/tarefa");
+            }, 2000);
 
         } catch (error: any) {
             console.error("Erro ao salvar atividade:", error);

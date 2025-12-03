@@ -12,7 +12,8 @@ import {
   TextField,
   Snackbar, 
   Alert,
-  type AlertColor 
+  type AlertColor, 
+  Autocomplete
 } from '@mui/material';
 
 // Ícones
@@ -22,6 +23,9 @@ import FolderOpenIcon from '@mui/icons-material/FolderOpen';
 import CheckBoxIcon from '@mui/icons-material/CheckBox';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import logoImg from "../assets/logo.png";
+import { useNavigate } from 'react-router-dom';
+import Logo from '../components/logo';
+import AvatarIcone from '../components/avatar';
 
 // --- 1. Interfaces ---
 interface Task {
@@ -78,6 +82,8 @@ const TaskItem: React.FC<TaskItemProps> = ({ task, onToggleSelect }) => {
 
 // --- 3. Página Principal ---
 export default function TodoListPage() {
+  const navigate = useNavigate();
+
   const [tasks, setTasks] = useState<Task[]>([]); 
   const [tempInput, setTempInput] = useState("");
 
@@ -96,8 +102,21 @@ export default function TodoListPage() {
     setNotification({ ...notification, open: false });
   };
 
-  const handleGoToStats = () => showNotification("Navegando para Estatísticas...", "info");
-  const handleGoToNewPage = () => showNotification("Abrindo página de Nova Tarefa...", "info");
+  const handleGoToStats = () => {
+    showNotification("Navegando para Estatísticas...", "info");
+
+    setTimeout(() => {
+      navigate("/dashboard");
+    }, 1000); // 1 segundo
+  };
+
+  const handleGoToNewPage = () => {
+    showNotification("Abrindo página de Nova Tarefa...", "info");
+
+    setTimeout(() => {
+      navigate("/criar");
+    }, 1000); // 1 segundo
+  };
 
   const toggleSelectTask = (id: number) => {
     setTasks(tasks.map(t => t.id === id ? { ...t, selected: !t.selected } : t));
@@ -134,7 +153,8 @@ export default function TodoListPage() {
   };
 
   const actionBtnStyle = {
-    border: '2px solid #e0e0e0', borderRadius: 2, p: 1, transition: 'all 0.2s',
+    border: '2px solid #e0e0e0', borderRadius: 2, transition: 'all 0.2s',
+    p: 2, width: 70, height: 70, 
     '&:hover': { bgcolor: '#e3f2fd', borderColor: '#2196f3', transform: 'translateY(-2px)' }
   };
 
@@ -145,41 +165,36 @@ export default function TodoListPage() {
       <Paper 
         elevation={0} 
         sx={{ 
-          position: 'fixed', top: 0, left: 0, right: 0, height: '80px', zIndex: 1100,
+          position: 'fixed', top: 0, left: 0, right: 0, zIndex: 1100,
           bgcolor: 'white', borderBottom: '1px solid #eee', px: 4, 
-          display: 'flex', justifyContent: 'space-between', alignItems: 'center'
+          display: 'flex', justifyContent: 'space-between', alignItems: 'center',
+          height: '120px',
         }}
       >
-        <Stack direction="row" spacing={2} alignItems="center">
-          <Avatar sx={{ width: 56, height: 56, bgcolor: 'transparent', border: '2px solid black', color: 'black' }}>
-            <PersonIcon sx={{ fontSize: 32 }} />
-          </Avatar>
-          <Box>
-            <Box sx={{ bgcolor: '#bbdefb', px: 1, borderRadius: 1, width: 'fit-content' }}>
-              <Box component="img" src={logoImg} alt="Logo" sx={{ height: 60, width: 'auto', mb: 0.5, borderRadius: 1 }} />
-            </Box>
-          </Box>
+        <Stack direction="row" spacing={2} alignItems="center" >
+          <AvatarIcone onSair={() => navigate("/")} onConfig={() => navigate("/config")} />
+          <Logo />
         </Stack>
 
         <Stack direction="row" spacing={2}>
           <Tooltip title="Dashboard">
             <IconButton onClick={handleGoToStats} sx={actionBtnStyle}>
-              <BarChartIcon color="primary" fontSize="large" />
+              <BarChartIcon color="primary" sx={{ fontSize: 45 }} />
             </IconButton>
           </Tooltip>
           <Tooltip title="Criar nova tarefa">
             <IconButton onClick={handleGoToNewPage} sx={actionBtnStyle}>
-              <FolderOpenIcon sx={{ color: '#00bcd4' }} fontSize="large" />
+              <FolderOpenIcon sx={{ color: '#00bcd4', fontSize: 45 }} fontSize="large" />
             </IconButton>
           </Tooltip>
           <Tooltip title="Concluir Selecionados">
             <IconButton onClick={handleCompleteSelected} sx={{ ...actionBtnStyle, borderColor: '#4caf50' }}>
-              <CheckBoxIcon color="success" fontSize="large" />
+              <CheckBoxIcon color="success" sx={{ fontSize: 45 }} />
             </IconButton>
           </Tooltip>
           <Tooltip title="Apagar Selecionados">
             <IconButton onClick={handleDeleteSelected} sx={{ ...actionBtnStyle, borderColor: '#ef5350' }}>
-              <DeleteForeverIcon color="error" fontSize="large" />
+              <DeleteForeverIcon color="error" sx={{ fontSize: 45 }} />
             </IconButton>
           </Tooltip>
         </Stack>
@@ -187,7 +202,7 @@ export default function TodoListPage() {
 
       {/* --- CONTEÚDO PRINCIPAL (MUDANÇA AQUI) --- */}
       {/* Alterei maxWidth="md" para "lg" (large) */}
-      <Container maxWidth="lg" sx={{ mt: 14, pb: 20 }}>
+      <Container maxWidth="lg" sx={{ mt: 18, pb: 20 }}>
         <Box sx={{ minHeight: 200 }}>
           {tasks.length === 0 ? (
             <Typography align="center" color="text.secondary" sx={{ fontStyle: 'italic' }}>

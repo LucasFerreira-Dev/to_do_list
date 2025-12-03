@@ -5,12 +5,15 @@ import LoginCadastrar from "./pages/loginCadastrar";
 import CriarAtividade from "./pages/criarAtividade";
 import TodoListPage from "./pages/tarefas";
 import Config from "./pages/config";
+import VerAtidade from "./pages/verAtividade";
+import DashboardPage from "./pages/dashboard";
+
 import "./App.css";
 
 //Ambiente de testes
 import Testes from "./pages/testes";
 import ConcluirAtividade from "./pages/concluirAtividade";
-import VerAtidade from "./pages/verAtividade";
+
 
 function App() {
   return (
@@ -25,6 +28,7 @@ function App() {
           <Route path="/config" element={<Config/>} />
           <Route path="/editar" element={<ConcluirAtividade />} />
           <Route path="/tarefa/:id" element={<VerAtidade />} />
+          <Route path="/dashboard" element={<DashboardPage />} />
 
           {/*Ambiente de testes */}
           <Route path="/teste" element={<Testes />} />

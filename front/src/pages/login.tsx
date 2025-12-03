@@ -9,6 +9,7 @@ import {
   Alert,
 } from "@mui/material";
 import { z } from "zod";
+import { useNavigate } from "react-router-dom";
 
 // 📌 Validações com Zod (como no seu código original)
 const emailSchema = z.string().email("Email inválido");
@@ -22,6 +23,8 @@ const passwordSchema = z
 .regex(/[^A-Za-z0-9]/, "A senha deve conter ao menos um caractere especial");
 
 const Login: React.FC = () => {
+    const navigate = useNavigate();
+
     // estados para email, senha e mensagem de erro
     const [email, setEmail] = useState("");
     const [senha, setSenha] = useState("");
@@ -47,6 +50,10 @@ const Login: React.FC = () => {
 
         // Aqui você faz o login real (axios, etc.)
         
+        // ⏳ Aguarda 2 segundos antes de navegar
+        setTimeout(() => {
+            navigate("/tarefa");
+        }, 1000);
     };
 
     return (
