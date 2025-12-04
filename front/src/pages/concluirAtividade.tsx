@@ -167,7 +167,7 @@ const ConcluirAtividade: React.FC = () => {
     const [descricao, getDescricao] = useState("");
     const [alertaMensagem, setAlertaMensagem] = useState("");
     const [alertaTipo, setAlertaTipo] = useState<"success" | "error" | null>(null);
-    const [loading, setLoading] = useState(false);
+    const [, setLoading] = useState(false);
     const [readonly, setReadonly] = useState(false);
     
     const navigate = useNavigate();

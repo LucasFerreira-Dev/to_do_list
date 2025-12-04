@@ -169,7 +169,7 @@ const CriarAtividade: React.FC = () => {
     const [alertaTipo, setAlertaTipo] = useState<"success" | "error" | null>(null);
 
     // loading para bloquear múltiplos cliques enquanto envia
-    const [loading, setLoading] = useState(false);
+    const [, setLoading] = useState(false);
 
     const navigate = useNavigate();
 

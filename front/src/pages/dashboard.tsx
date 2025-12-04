@@ -48,7 +48,7 @@ export default function DashboardPage() {
   const [activeFilter, setActiveFilter] = useState<'dia' | 'mes' | 'ano' | 'pontuacao'>('dia');
   
   // Estado Inicial ZERADO (Para indicar que não há conexão com o banco ainda)
-  const [stats, setStats] = useState({
+  const [stats] = useState({
     finalizadas: "0",
     pendentes: "0",
     xp: "0"

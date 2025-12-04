@@ -7,7 +7,6 @@ import {
   Typography, 
   IconButton, 
   Paper, 
-  Avatar, 
   Stack,
   Tooltip,
   Button,
@@ -19,7 +18,7 @@ import {
 } from '@mui/material';
 
 // Ícones do MUI
-import PersonIcon from '@mui/icons-material/Person';
+
 import BarChartIcon from '@mui/icons-material/BarChart';
 import FolderOpenIcon from '@mui/icons-material/FolderOpen';
 import CheckBoxIcon from '@mui/icons-material/CheckBox';
@@ -27,7 +26,7 @@ import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 
 // --- ALTERAÇÃO AQUI: Importando a logo localmente ---
 // Certifique-se de que a imagem "logo.png" existe na pasta "src/assets/"
-import logoImg from "../assets/logo.png"; 
+
 import Logo from '../components/logo';
 import AvatarIcone from '../components/avatar';
 // ----------------------------------------------------
